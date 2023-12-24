@@ -44,3 +44,12 @@ They are specified in XML which means that they can be edited independently from
 
 - **Chatter Feature:** Many Form Views include Odoo's "Chatter" feature at the bottom, allowing users to log notes, send messages, and track the history of changes and communications related to the record.
 </details>
+<details>
+   <summary> Technical Aspects </summary>
+
+- **XML Definition:** The structure and fields of a Form View are defined in an XML file. This definition includes the field types, labels, default values, and layout.
+
+- **Inheritance and Extension:** Form Views can be inherited and extended in custom modules, allowing developers to add or modify fields and behaviors without altering the base functionality.
+
+- **Model Binding:** Each Form View is bound to a specific model (database table), and the fields displayed correspond to the columns in the model.
+</details>
