@@ -1,7 +1,8 @@
-https://docs.github.com/en/get-started/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax
-
 # View Records
-```Views are what define how records should be displayed to end-users. They are specified in XML which means that they can be edited independently from the models that they represent. ```
+```
+Views are what define how records should be displayed to end-users.
+They are specified in XML which means that they can be edited independently from the models that they represent. 
+```
 
 ## View Types
 - **Form** -> display and edit the data from a single record
@@ -19,6 +20,22 @@ https://docs.github.com/en/get-started/writing-on-github/getting-started-with-wr
 - **Grid** -> display computed information in numerical cells are hardly configurable
 - **Map** -> display records on a map and the routes between them
 
+this is my documnet  <br>
+this is secind line
 
+<details>
 
+<summary>Tips for collapsed sections</summary>
+
+### You can add a header
+
+You can add text within a collapsed section. 
+
+You can add an image or a code block, too.
+
+```ruby
+   puts "Hello World"
+```
+
+</details>
   
