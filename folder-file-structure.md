@@ -89,7 +89,9 @@ _Here's an overview of what is usually imported in the __init__.py file of an Od
 
 - **Data Files**: While data files like XML or CSV are not imported in the __init__.py file, they are referenced in the module's manifest file (__manifest__.py) for data initialization or updates.
 - 
-   __init__.py File Content
+
+>  __init__.py File Content
+
 Based on this structure, the __init__.py file in your my_module directory would look like this:
 
 ```
