@@ -72,3 +72,40 @@ crm_custom/
 
 > Odoo's module-based architecture offers immense flexibility, allowing businesses to tailor the ERP system to their specific requirements. Whether it's through custom module development or configuring existing modules, Odoo provides a robust platform for a wide range of business applications.
   
+
+<details>
+<summary>  what are folders required to import in __init__.py of the odoo root folders</summary>
+> In the __init__.py file of an Odoo module, you typically import the Python packages and modules that make up that module. The __init__.py file serves as an initializer for the module, indicating to Python that the directory should be treated as a package. This file is also where you define which parts of your module are to be loaded by Odoo.
+
+_Here's an overview of what is usually imported in the __init__.py file of an Odoo module:_
+
+- **Models**: The Python classes defining the data models (which correspond to database tables) are imported here. These classes are usually located in the models directory of the module.
+
+- **Controllers**: If your module defines web controllers (for example, to handle routes or web requests), they are typically located in a controllers directory and imported in the __init__.py file.
+
+- **Wizards**: If your module uses wizards (transient models for temporary data or user interactions), these are often placed in a wizards directory and should be imported.
+
+- **Reports**: If you have custom report templates or report logic, they are generally stored in a reports directory.
+
+- **Data Files**: While data files like XML or CSV are not imported in the __init__.py file, they are referenced in the module's manifest file (__manifest__.py) for data initialization or updates.
+- 
+   __init__.py File Content
+Based on this structure, the __init__.py file in your my_module directory would look like this:
+
+```
+
+# Import models
+from . import models
+
+# Import controllers
+from . import controllers
+
+# Import wizards
+from . import wizards
+
+# Import reports
+from . import reports
+
+```
+
+</details>
