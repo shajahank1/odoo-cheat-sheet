@@ -54,8 +54,9 @@ Now, when you start your Odoo server and navigate to http://yourdomain.com/my_ur
 ### Conclusion:
 - Controllers in Odoo are powerful tools for web development, allowing you to extend the capabilities of your Odoo application, create custom web pages, and build integrations with other systems or services. They are an essential part of Odoo's architecture for developers looking to leverage web technologies within the Odoo ecosystem.
 
-
-###   HTTP Routing: 
+<details>
+   <summary>  HTTP Routing: </summary>
+  
 > Routing in Odoo is a way to map URLs to Python methods in controllers. It's an essential part of creating web applications in Odoo because it determines how HTTP requests are handled and responded to. The @http.route decorator is used to define routes.
 
 **Basic Example of Routing**
@@ -120,6 +121,6 @@ Routing is crucial for:
 - Creating custom web pages or controllers in your Odoo application.
 - Handling form submissions or any server interaction from the client side.
 - By using routing effectively, you can extend Odoo's capabilities to meet various business needs, whether it's adding new pages to your website or creating a complete API for third-party integration.
-
+</details>
 
 
