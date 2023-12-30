@@ -54,3 +54,38 @@ Now, when you start your Odoo server and navigate to http://yourdomain.com/my_ur
 ### Conclusion:
 - Controllers in Odoo are powerful tools for web development, allowing you to extend the capabilities of your Odoo application, create custom web pages, and build integrations with other systems or services. They are an essential part of Odoo's architecture for developers looking to leverage web technologies within the Odoo ecosystem.
 
+
+###   HTTP Routing: 
+> Routing in Odoo is a way to map URLs to Python methods in controllers. It's an essential part of creating web applications in Odoo because it determines how HTTP requests are handled and responded to. The @http.route decorator is used to define routes.
+
+**Basic Example of Routing**
+Here's a simple example:
+```
+from odoo import http
+
+class MyController(http.Controller):
+    @http.route('/my_url', auth='public')
+    def my_method(self):
+        return "Hello, Odoo!"
+```
+In this example, when a user navigates to /my_url on the Odoo server, the my_method function is called, and it returns a simple string.
+
+### Parameters of the @http.route Decorator
+- Route/URLs: The first argument(s) are the route(s) or URL(s) the method will handle. You can pass a single string or a list of strings for multiple routes.
+
+- auth: Defines the authentication type. Common values are:
+
+- 'user': The user must be authenticated; redirects to the login page if not.
+- 'public': The route is accessible to everyone, even if not logged in.
+- 'none': No authentication is performed.
+- type: Specifies the response type. It can be:
+
+- 'http': For regular HTTP responses.
+- 'json': For JSON responses (used in JSON-RPC).
+- methods: A list of HTTP methods this route should handle (e.g., ['GET', 'POST']). If not set, all methods are allowed.
+
+- website: If set to True, the route is only accessible through the website and uses the website layout.
+
+- csrf: Enables or disables Cross-Site Request Forgery protection. It's enabled by default for type='http' and methods=['POST'].
+
+
