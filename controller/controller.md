@@ -118,6 +118,42 @@ class AdvancedController(http.Controller):
 - handle_json returns JSON data and is accessible to everyone.
 - handle_post only accepts POST requests, has no authentication, and CSRF protection is disabled.
 
+<details>
+ <summary>Handling methods: </summary>
+
+  HTTP methods like GET, POST, PUT, DELETE, etc., indicate the desired action to be performed on the resource identified by the URL. Odoo allows you to specify which methods your route should handle, and you can write your controller logic accordingly.
+
+**Specifying HTTP Methods in Odoo**
+When defining a route in Odoo, you can use the methods parameter in the @http.route decorator to specify which HTTP methods your route should respond to. If methods is not specified, the route will respond to all HTTP methods by default.
+
+**Example of Handling Different Request Methods**
+Here's an example of how to handle different HTTP methods in an Odoo controller:
+
+```
+from odoo import http
+from odoo.http import request
+
+class MyController(http.Controller):
+    @http.route('/api/resource', type='json', auth='public', methods=['GET', 'POST'])
+    def api_resource(self, **kw):
+        if request.httprequest.method == 'GET':
+            # Logic for handling GET requests
+            return {'response': 'GET request processed'}
+        
+        elif request.httprequest.method == 'POST':
+            # Logic for handling POST requests
+            # Accessing JSON data from the request body
+            data = request.jsonrequest
+            return {'response': 'POST request processed', 'data': data}
+```
+In this example:
+
+> The route /api/resource can handle both GET and POST requests.  
+The method api_resource checks request.httprequest.method to determine the type of the HTTP request and processes it accordingly.  
+For POST requests, the example assumes that the request body contains JSON data, which is accessed via request.jsonrequest.
+
+</details>
+
 ### Usage of Routing
 Routing is crucial for:
 
