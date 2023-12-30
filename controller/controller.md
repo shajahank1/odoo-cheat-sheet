@@ -71,21 +71,55 @@ class MyController(http.Controller):
 In this example, when a user navigates to /my_url on the Odoo server, the my_method function is called, and it returns a simple string.
 
 ### Parameters of the @http.route Decorator
-- Route/URLs: The first argument(s) are the route(s) or URL(s) the method will handle. You can pass a single string or a list of strings for multiple routes.
+- **_Route**/**URLs**: The first argument(s) are the route(s) or URL(s) the method will handle. You can pass a single string or a list of strings for multiple routes._
 
-- auth: Defines the authentication type. Common values are:
+- **_auth**: Defines the authentication type. Common values are:_
 
-- 'user': The user must be authenticated; redirects to the login page if not.
-- 'public': The route is accessible to everyone, even if not logged in.
-- 'none': No authentication is performed.
-- type: Specifies the response type. It can be:
+  1. 'user': The user must be authenticated; redirects to the login page if not.
+  2. 'public': The route is accessible to everyone, even if not logged in.
+  3. 'none': No authentication is performed.
+  4. type: Specifies the response type. It can be:
 
-- 'http': For regular HTTP responses.
-- 'json': For JSON responses (used in JSON-RPC).
-- methods: A list of HTTP methods this route should handle (e.g., ['GET', 'POST']). If not set, all methods are allowed.
+- '**http**': _For regular HTTP responses._
+- '**json**': _For JSON responses (used in JSON-RPC)._
+- **methods**: _A list of HTTP methods this route should handle (e.g., ['GET', 'POST']). If not set, all methods are allowed._
 
-- website: If set to True, the route is only accessible through the website and uses the website layout.
+- **website**: _If set to True, the route is only accessible through the website and uses the website layout._
 
-- csrf: Enables or disables Cross-Site Request Forgery protection. It's enabled by default for type='http' and methods=['POST'].
+- **csrf**: _Enables or disables Cross-Site Request Forgery protection. It's enabled by default for type='http' and methods=['POST']._
+
+#### Extended Example
+Let's look at a more comprehensive example demonstrating these parameters:
+```
+from odoo import http
+from odoo.http import request
+
+class AdvancedController(http.Controller):
+    @http.route(['/route1', '/route2'], type='http', auth='user', methods=['GET'])
+    def handle_multiple_routes(self):
+        return "<h1>Response for multiple routes</h1>"
+
+    @http.route('/json_route', type='json', auth='public')
+    def handle_json(self, **kw):
+        data = {'message': 'JSON response'}
+        return data
+
+    @http.route('/post_only', methods=['POST'], auth='none', csrf=False)
+    def handle_post(self):
+        return "POST request accepted"
+```
+**In this example:**
+- handle_multiple_routes handles GET requests for two URLs and requires user authentication.
+- handle_json returns JSON data and is accessible to everyone.
+- handle_post only accepts POST requests, has no authentication, and CSRF protection is disabled.
+
+### Usage of Routing
+Routing is crucial for:
+
+- Defining API endpoints for external integrations.
+- Creating custom web pages or controllers in your Odoo application.
+- Handling form submissions or any server interaction from the client side.
+- By using routing effectively, you can extend Odoo's capabilities to meet various business needs, whether it's adding new pages to your website or creating a complete API for third-party integration.
+
 
 
