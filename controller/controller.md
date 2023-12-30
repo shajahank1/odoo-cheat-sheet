@@ -209,19 +209,17 @@ In this example, a custom response is created with a specific status code, MIME 
 
 - **Dynamic Route Parameters:** Variable parts of the URL that are captured and passed to the method.
 
-- **Integer (<int:parameter>):** Matches and captures an integer value.
+  1. **Integer (<int:parameter>):** Matches and captures an integer value.
 
       Example: /user/<int:user_id> - Matches /user/123 and user_id will be 123.
-
-- **String (<string:parameter>):** Matches and captures a string. It does not include slashes.
+  2. **String (<string:parameter>):** Matches and captures a string. It does not include slashes.
 
       Example: /category/<string:category_name> - Matches /category/electronics.
 
-- **Path (<path:parameter>):** Similar to string, but it can include slashes.
+  3. **Path (<path:parameter>):** Similar to string, but it can include slashes.
 
       Example: /path/<path:subpath> - Matches /path/some/long/subpath.
-
-- **Other Types:** Other types like float, uuid, etc., can also be used but are less common.
+  4. **Other Types:** Other types like float, uuid, etc., can also be used but are less common.
 
 - **Query String Parameters:** These are not defined in the route but are appended to the URL after a ?.
 
@@ -263,6 +261,9 @@ Static parameters in Odoo routes are the fixed parts of a URL used to define spe
 ### Handling Dynamic Route Parameters
 Dynamic parameters are part of the route URL and are passed as arguments to your controller method.
 
+> When a user navigates to a URL that matches one of these patterns, the corresponding method is called, and the dynamic part of the URL is passed to the method as an argument. Inside the method, you can use this parameter to perform actions, such as retrieving a record from the database.  
+
+
 ```
 from odoo import http
 
@@ -272,6 +273,49 @@ class MyController(http.Controller):
         return f"Profile of user {user_id}"
 ``` 
 In this example, user_id is a dynamic route parameter of type integer.
+
+### Definition and Usage
+
+> Dynamic parameters in a route are defined by including variable parts within angle brackets < > in the URL. These parameters are then passed as arguments to your controller method.
+
+### Types of Dynamic Route Parameters
+- Integer (<int:parameter>): This captures an integer value from the URL and passes it as an integer.  
+Example: /order/<int:order_id>  
+
+- String (<string:parameter>): This captures a string. It does not include slashes.  
+Example: /category/<string:category_name>  
+
+- Path (<path:parameter>): This is similar to string but can include slashes, useful for URLs with multiple path segments.  
+Example: /library/<path:book_path>  
+
+#### Implementing Dynamic Parameters
+Here’s how you can implement and use dynamic parameters in Odoo:
+```
+from odoo import http
+
+class MyController(http.Controller):
+    @http.route('/user/<int:user_id>', auth='public')
+    def user_profile(self, user_id):
+        # Logic to handle the user profile based on user_id
+        return f"Profile of user with ID {user_id}"
+
+    @http.route('/category/<string:category_name>', auth='public')
+    def category(self, category_name):
+        # Logic for handling specific category
+        return f"Welcome to the {category_name} category"
+
+    @http.route('/library/<path:book_path>', auth='public')
+    def book(self, book_path):
+        # Logic for handling book path
+        return f"Book path: {book_path}"
+```
+In this example:
+
+/user/<int:user_id> captures an integer user_id.
+/category/<string:category_name> captures a string category_name.
+/library/<path:book_path> captures a path book_path which can include slashes.
+
+
 
 ### Handling Query String Parameters
 
