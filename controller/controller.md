@@ -227,6 +227,39 @@ In this example, a custom response is created with a specific status code, MIME 
 
     Example: /search?query=laptop - Here, query is a query string parameter.
 
+### Static Parameters
+> Handling static parameters in Odoo involves defining parts of the URL that remain constant. These static segments in the URL path are used to define specific routes that your controller methods will respond to. Unlike dynamic parameters, which can change and be captured as variables, static parameters are fixed and form the basic structure of your URL.
+
+#### Defining Static Parameters in Routes
+When you define a route in Odoo, you typically include static parameters to specify a particular path. For instance:
+```
+from odoo import http
+
+class MyController(http.Controller):
+    @http.route('/about', auth='public')
+    def about_page(self):
+        return "This is the About page."
+
+    @http.route('/contact', auth='public')
+    def contact_page(self):
+        return "This is the Contact page."
+```
+In this example:
+
+The route /about is a static parameter. When users navigate to yourdomain.com/about, the about_page method will handle the request.
+Similarly, /contact is another static parameter, routing requests to yourdomain.com/contact to the contact_page method.
+#### Usage of Static Parameters
+Static parameters are used for:  
+- Defining Clear and Structured URLs: They help in creating a well-structured and readable URL pattern. For instance, /products, /services, /blog etc., are common static parameters in URLs that clearly indicate the page content.   
+- Creating SEO-Friendly URLs: Static URLs are easier to index and rank by search engines, making them better for SEO.  
+- Navigation and Menu Items: They are often used to define the main navigation structure of a website.  
+
+#### Considerations
+**Consistency**: Static parameters should be consistently defined across your application for clarity and maintainability.  
+**Combination with Dynamic Parameters:** Often, static parameters are used in combination with dynamic parameters to create more complex and useful routing patterns. For example, /blog/<string:post_slug> combines a static /blog segment with a dynamic segment for the blog post slug.
+#### Summary
+Static parameters in Odoo routes are the fixed parts of a URL used to define specific endpoints for controller methods. They are crucial for creating an organized and navigable structure in web applications, ensuring that URLs are user-friendly and meaningful.
+
 ### Handling Dynamic Route Parameters
 Dynamic parameters are part of the route URL and are passed as arguments to your controller method.
 
