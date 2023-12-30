@@ -226,5 +226,83 @@ In this example, a custom response is created with a specific status code, MIME 
 - **Query String Parameters:** These are not defined in the route but are appended to the URL after a ?.
 
     Example: /search?query=laptop - Here, query is a query string parameter.
-  
+
+### Handling Dynamic Route Parameters
+Dynamic parameters are part of the route URL and are passed as arguments to your controller method.
+
+```
+from odoo import http
+
+class MyController(http.Controller):
+    @http.route('/user/<int:user_id>', auth='public')
+    def user_profile(self, user_id):
+        return f"Profile of user {user_id}"
+``` 
+In this example, user_id is a dynamic route parameter of type integer.
+
+### Handling Query String Parameters
+
+ Query string parameters are appended to the URL after a question mark ? and can include multiple parameters separated by &. These parameters are not defined in the route itself but are passed through the URL and can be accessed in the controller method.
+
+#### Accessing Query String Parameters
+In Odoo, you can access query string parameters using the **kw argument in your controller method. This argument captures all the named parameters sent in the request.
+
+Query string parameters are not part of the route URL. They are accessible through the **kw argument in your controller method.
+```
+class MyController(http.Controller):
+    @http.route('/search', auth='public')
+    def search(self, **kw):
+        query = kw.get('query', '')
+        return f"Search results for {query}"
+```
+In this example, if the URL is /search?query=laptop, query will be "laptop".
+
+Example
+Let's say you have a search page where users can pass a query through the URL, like /search?query=odoo.
+
+Here's how you'd handle this in an Odoo controller:
+```
+from odoo import http
+from odoo.http import request
+
+class MyController(http.Controller):
+    @http.route('/search', auth='public', type='http')
+    def search(self, **kw):
+        search_query = kw.get('query', '')
+        # Perform search using search_query
+        return f"Results for: {search_query}"
+```
+
+In this example:
+
+The method search captures the query string parameters using **kw.
+kw.get('query', '') retrieves the value of query. If query is not provided in the URL, it defaults to an empty string.
+
+### Handling Multiple Query Parameters
+You can handle multiple query parameters in a similar way. For instance, if you have a URL like /filter?category=books&sort=price.
+
+Your controller method would look like this:
+```
+@http.route('/filter', auth='public', type='http')
+def filter(self, **kw):
+    category = kw.get('category', 'all')
+    sort_order = kw.get('sort', 'none')
+    # Apply filtering based on category and sort_order
+    return f"Filtering {category} sorted by {sort_order}"
+```
+#### Best Practices
+**Validation**: Always validate the query parameters to ensure they contain safe and expected data.  
+**Default Values:** Use .get() with a default value to handle cases where a parameter might not be provided.  
+**Error Handling:** Include proper error handling for invalid or unexpected parameter values.  
+
+> Query string parameters are extensively used for filtering, searching, pagination, and other dynamic data retrieval mechanisms in web applications. They are easy to implement and offer a straightforward way for users to interact with your application dynamically.
+
+
+
+### Best Practices
+**Validation**: Always validate the parameters, especially dynamic and query string parameters, to ensure they contain expected and safe data.  
+**Use Appropriate Types:** Use the correct type for dynamic parameters to ensure they match the expected format.  
+**Default Values:** For query string parameters, use .get() with a default value to handle cases where the parameter might not be provided.  
+Proper handling of URL parameters allows for the creation of responsive and dynamic web applications in Odoo, enhancing user experience by providing tailored content based on user input and navigation
+
 </details>
