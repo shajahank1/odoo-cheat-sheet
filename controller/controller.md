@@ -199,7 +199,9 @@ In this example, a custom response is created with a specific status code, MIME 
 </details>
 
 <details>
-  <summary> Types of URL Parameters in Odoo </summary>
+<summary> Types of URL Parameters in Odoo </summary>
+
+  _In Odoo, URL parameter or argument handling is an essential part of creating dynamic routes in your web controllers. These parameters allow your application to respond differently based on the values passed through the URL. Odoo supports different types of URL parameters, each with its own use case._
   
 - **Static Parameters**: Fixed parts of the URL.
 
