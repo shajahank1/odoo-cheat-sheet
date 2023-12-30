@@ -198,3 +198,31 @@ In this example, a custom response is created with a specific status code, MIME 
 
 </details>
 
+<details>
+  <summary> Types of URL Parameters in Odoo </summary>
+  
+- **Static Parameters**: Fixed parts of the URL.
+
+      Example: /page/contact_us - Here, page and contact_us are static parameters.
+
+- **Dynamic Route Parameters:** Variable parts of the URL that are captured and passed to the method.
+
+- **Integer (<int:parameter>):** Matches and captures an integer value.
+
+      Example: /user/<int:user_id> - Matches /user/123 and user_id will be 123.
+
+- **String (<string:parameter>):** Matches and captures a string. It does not include slashes.
+
+      Example: /category/<string:category_name> - Matches /category/electronics.
+
+- **Path (<path:parameter>):** Similar to string, but it can include slashes.
+
+      Example: /path/<path:subpath> - Matches /path/some/long/subpath.
+
+- **Other Types:** Other types like float, uuid, etc., can also be used but are less common.
+
+- **Query String Parameters:** These are not defined in the route but are appended to the URL after a ?.
+
+    Example: /search?query=laptop - Here, query is a query string parameter.
+  
+</details>
