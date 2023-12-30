@@ -84,10 +84,14 @@ In this example, when a user navigates to /my_url on the Odoo server, the my_met
 - '**http**': _For regular HTTP responses._
 - '**json**': _For JSON responses (used in JSON-RPC)._
 - **methods**: _A list of HTTP methods this route should handle (e.g., ['GET', 'POST']). If not set, all methods are allowed._
-
+  
 - **website**: _If set to True, the route is only accessible through the website and uses the website layout._
-
+   ```  @http.route('/post_example', auth='public', methods=['POST']) '''
+   ```  @http.route('/post_example', auth='public', methods=['GET']) '''
+   > If you don't specify the methods parameter, the route will accept all HTTP methods. 
 - **csrf**: _Enables or disables Cross-Site Request Forgery protection. It's enabled by default for type='http' and methods=['POST']._
+- **cors (str)** – _The Access-Control-Allow-Origin cors directive value._
+- **handle_params_access_error** _(Callable[[Exception], Response]) – Implement a custom behavior if an error occurred when retrieving the record from the URL parameters (access error or missing error)._
 
 #### Extended Example
 Let's look at a more comprehensive example demonstrating these parameters:
