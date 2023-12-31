@@ -36,8 +36,9 @@ The most straightforward way to trigger an action is by clicking on a menu item.
 <menuitem id="menu_action_example"
           name="Example Action"
           action="action_example"/>
-```**
-**Action Definition:****
+```
+
+**Action Definition:**
 ```
 <record id="action_example" model="ir.actions.act_window">
     <field name="name">Example Action</field>
