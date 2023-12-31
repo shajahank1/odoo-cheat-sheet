@@ -36,3 +36,50 @@ your.model should be replaced with the actual model name.
 - Data Overview: Provides a high-level view of data, useful in various operational contexts like inventory management, sales order processing, or employee directory.  
 
 > Tree views are fundamental in Odoo for presenting data in a clear, concise, and navigable format. They are widely used across various modules for their efficiency in displaying and interacting with large datasets.
+
+## sorting the tree view
+Sorting in a tree view in Odoo is managed through the model's Python code and the XML view definition. Here's how you can set up sorting for your tree view:
+
+### 1. Default Sorting in the Model
+In your model definition (Python file), you can specify the default sort order using the _order attribute. This attribute determines the default sorting of records when they are displayed in a tree view.
+
+**Python Model Example**
+```
+class YourModel(models.Model):
+    _name = 'your.model'
+    _description = 'Your Model Description'
+    _order = 'field_name ASC'  # Replace 'field_name' with your field's name
+
+    field_name = fields.Char('Field Label')
+    # other field definitions
+
+```
+In this example, records will be sorted by field_name in ascending order (ASC) by default.
+
+### 2. Sorting in the Tree View
+In the tree view XML definition, you can make columns clickable for sorting by setting the sortable="True" attribute in the <field> tag.
+
+**XML View Example**
+```
+<record id="view_your_model_tree" model="ir.ui.view">
+    <field name="name">your.model.tree</field>
+    <field name="model">your.model</field>
+    <field name="arch" type="xml">
+        <tree string="Your Model Tree View">
+            <field name="field_name" sortable="True"/>
+            <!-- other fields -->
+        </tree>
+    </field>
+</record>
+```
+In this tree view, the column for field_name will be sortable. Users can click on the column header in the tree view to toggle between ascending and descending sort order.
+
+### 3. Combining Default Sorting with View Sorting
+By combining the _order attribute in your model and sortable="True" in your tree view, you can define both the default sorting behavior and allow users to sort by different columns in the UI.
+
+#### Usage
+>Efficient Data Navigation: Sorting is essential for users to quickly find records, especially in views with large data sets.
+Adaptability: Different users might need different sorting orders based on their tasks, so enabling sorting in the tree view adds flexibility to data navigation.
+
+>By setting up sorting in both the model and tree view, you enhance the usability and efficiency of the tree view in Odoo, providing a better user experience for data navigation and management.
+
