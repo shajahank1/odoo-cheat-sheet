@@ -119,3 +119,58 @@ base.menu_custom should be replaced with the ID of the parent menu under which y
 - **Efficient Data Presentation**: Default filters are particularly useful when there is a common subset of data that users frequently need to access, such as open tasks or pending orders.
 - **Improved User Experience:** Providing a default filtered view saves time for users by pre-selecting the most relevant or commonly used data set.
 > This method of setting default filters helps streamline user workflows in Odoo by presenting them with the most pertinent data as soon as they open a view.
+
+# Customizing filters
+> Customizing filters in Odoo involves defining specific criteria that allow users to quickly find the records they need in a list view. Filters are usually set up in the search view of a model and can be customized to fit the specific needs of your application. Let's go through the process with an example.
+
+**Example: Customizing Filters for a Product Model**
+Suppose you have a product model, and you want to add filters to allow users to quickly find products based on categories like 'Electronics', 'Clothing', or based on whether they are 'In Stock' or 'Out of Stock'.
+
+### Step 1: Define Search View
+First, you need to define a search view for your model in XML.
+
+```
+<record id="product_search_view" model="ir.ui.view">
+    <field name="name">product.search.view</field>
+    <field name="model">product.template</field>
+    <field name="arch" type="xml">
+        <search>
+            <!-- Filter definitions will go here -->
+        </search>
+    </field>
+</record>
+```
+### Step 2: Add Filter Definitions
+Inside the <search> tag, you define your filters.
+
+```
+<filter string="Electronics" name="filter_electronics" domain="[('category_id.name', '=', 'Electronics')]"/>
+<filter string="Clothing" name="filter_clothing" domain="[('category_id.name', '=', 'Clothing')]"/>
+<filter string="In Stock" name="filter_in_stock" domain="[('quantity_available', '>', 0)]"/>
+<filter string="Out of Stock" name="filter_out_stock" domain="[('quantity_available', '=', 0)]"/>
+```
+In these examples:
+
+The string attribute is what the user sees in the UI.
+The name attribute is a unique identifier for the filter.
+The domain attribute defines the filtering criteria. For instance, domain="[('category_id.name', '=', 'Electronics')]" filters the products to show only those whose category_id.name field is 'Electronics'.
+### Step 3: Link Search View to Action
+Ensure that this search view is linked to the action that opens your product list view.
+
+```
+<record id="action_open_products" model="ir.actions.act_window">
+    <field name="name">Products</field>
+    <field name="res_model">product.template</field>
+    <field name="view_mode">tree,form</field>
+    <field name="search_view_id" ref="product_search_view"/>
+</record>
+```
+#### Usage
+**With this setup:**
+
+> Users can go to the products list view and see filters like 'Electronics', 'Clothing', 'In Stock', and 'Out of Stock'.
+Clicking on these filters will instantly update the list to show only the relevant records.
+Custom Development for More Complex Filters
+For more complex filters, especially those involving dynamic data or calculations, you might need to extend the model's search method in Python or use computed fields to create filterable criteria.
+
+> This example shows a basic way to customize filters in Odoo. Depending on your specific requirements, you may need more advanced configurations, which could involve a combination of XML, Python, and possibly JavaScript if you're customizing the web client's behavior.
