@@ -174,3 +174,50 @@ Custom Development for More Complex Filters
 For more complex filters, especially those involving dynamic data or calculations, you might need to extend the model's search method in Python or use computed fields to create filterable criteria.
 
 > This example shows a basic way to customize filters in Odoo. Depending on your specific requirements, you may need more advanced configurations, which could involve a combination of XML, Python, and possibly JavaScript if you're customizing the web client's behavior.
+
+# Customizing the "Group By" functionality in an Odoo list view
+> Customizing the "Group By" functionality in an Odoo list view allows users to aggregate and organize records based on specific fields. This is especially useful for analyzing data sets and gaining insights from the records. Here's how you can customize the "Group By" options in Odoo:
+
+### Step 1: Define the Search View
+To add custom "Group By" options, you need to define a search view for your model. This is where you specify which fields can be used for grouping.
+
+**Example: Group By Customization for a Sales Order Model**
+Let's say you want to add "Group By" options for sales orders by customer and by salesperson.
+
+**Create a Search View with Group By Options:**
+```
+<record id="view_order_search" model="ir.ui.view">
+    <field name="name">order.search</field>
+    <field name="model">sale.order</field>
+    <field name="arch" type="xml">
+        <search>
+            <group string="Group By">
+                <filter string="Customer" context="{'group_by': 'partner_id'}"/>
+                <filter string="Salesperson" context="{'group_by': 'user_id'}"/>
+                <!-- Additional group by filters here -->
+            </group>
+        </search>
+    </field>
+</record>
+```
+In this example, two "Group By" filters are defined: one for grouping by partner_id (Customer) and one for user_id (Salesperson).
+### Step 2: Link the Search View to the Action
+Ensure the search view you defined is linked to the action that opens your model's list view.
+
+```
+<record id="action_sale_order" model="ir.actions.act_window">
+    <field name="name">Sales Orders</field>
+    <field name="res_model">sale.order</field>
+    <field name="view_mode">tree,form</field>
+    <field name="search_view_id" ref="view_order_search"/>
+</record>
+```
+#### Usage
+> Users can navigate to the Sales Orders list view and click on the "Group By" dropdown.
+They will see options to group records by "Customer" and "Salesperson".
+Selecting one of these options will organize the list view into groups based on the selected field.
+#### Considerations
+> "Group By" options enhance data analysis and organization, providing a more structured view of the records.
+You can add as many "Group By" options as needed, depending on the fields available in your model.
+This approach does not require any changes to the model's Python code and is purely managed through the search view XML configuration.
+Customizing "Group By" in Odoo is a powerful way to provide users with flexible options for viewing and analyzing data, making it easier to find patterns, trends, or specific record groupings.
