@@ -83,3 +83,39 @@ Adaptability: Different users might need different sorting orders based on their
 
 >By setting up sorting in both the model and tree view, you enhance the usability and efficiency of the tree view in Odoo, providing a better user experience for data navigation and management.
 
+### Filtering the Tree/List
+> To filter a list view by default in Odoo, you can define a default filter directly in the action that opens the view. This involves specifying a domain filter in the action's XML definition, which determines what records should be displayed when the view is initially opened. Here's how to do it:
+
+#### Step 1: Define the Action
+Actions in Odoo are used to define what happens when a user interacts with the system, such as opening a menu item. In this case, you want to define an action for opening your list view with a specific filter.
+
+**XML Action Example**
+```
+<record id="action_your_model" model="ir.actions.act_window">
+    <field name="name">Your Model</field>
+    <field name="res_model">your.model</field>
+    <field name="view_mode">tree,form</field>
+    <field name="domain">[('your_field', '=', 'your_value')]</field>
+</record>
+```
+In this example:  
+your.model is the name of the model you're working with.  
+The domain field is where you set your default filter. It uses Odoo's domain notation. Replace 'your_field' with the name of the field you want to filter by, and 'your_value' with the value you want to filter for.
+#### Step 2: Link the Action to a Menu Item (Optional)
+If you want this filtered view to be accessible from a menu, you need to link the action to a menu item.
+
+**XML Menu Item Example**
+```
+<menuitem id="menu_your_model"
+          name="Your Model"
+          action="action_your_model"
+          parent="base.menu_custom"/>
+```
+**In this example:**
+
+action_your_model is the ID of the action you defined earlier.
+base.menu_custom should be replaced with the ID of the parent menu under which you want this item to appear.
+#### Usage
+- **Efficient Data Presentation**: Default filters are particularly useful when there is a common subset of data that users frequently need to access, such as open tasks or pending orders.
+- **Improved User Experience:** Providing a default filtered view saves time for users by pre-selecting the most relevant or commonly used data set.
+> This method of setting default filters helps streamline user workflows in Odoo by presenting them with the most pertinent data as soon as they open a view.
