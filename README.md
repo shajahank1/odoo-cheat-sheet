@@ -1,1 +1,1 @@
-# odoo-cheat-sheet
+# odoo-17-documentation
