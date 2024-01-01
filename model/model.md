@@ -92,7 +92,7 @@ Here, res.partner is an existing model in Odoo, and CustomPartner extends it by 
 - Description: These models inherit from mail.thread and are integrated into Odoo’s messaging system.
 - Usage: For models where you want to attach mails, logs, and notifications.
 - Example: Customer model with email integration for communication tracking.
-- 
+  
 ### Delegated Inheritance Models:
 
 - Description: This is a type of model inheritance in Odoo where a model inherits fields and behaviors from another but stores data in a separate table.
@@ -100,3 +100,41 @@ Here, res.partner is an existing model in Odoo, and CustomPartner extends it by 
 - Example: Extending a user model to add additional fields specific to a module.
 
 > Each type of model serves specific needs within an Odoo application, offering flexibility and robustness in designing the system's architecture and functionality. The choice of model type depends on the data persistence requirements, the relationship with other models, and the specific business logic that needs to be implemented.
+
+##  Regular models in Odoo
+> Regular models in Odoo, defined by inheriting from models.Model, are the most common type of models used for representing and managing business data. These models correspond to database tables, each record representing a row in the table.
+
+### Key Characteristics of Regular Models
+- Data Persistence: Regular models store data persistently in the database.
+- Fields Definition: Fields in these models represent columns in the corresponding database table. You can define various field types like char, text, integer, float, boolean, date, binary, many2one (for relational fields), etc.
+- ORM Methods: Odoo provides an Object-Relational Mapping (ORM) layer, allowing you to perform database operations without writing SQL queries.
+- Business Logic: You can define methods to implement business logic, like actions to be taken when creating, updating, or deleting records.
+- Inheritance: Regular models support both inheritance and extension, allowing you to modify or extend existing models.
+- 
+### Example of a Regular Model
+Let's consider an example where we create a simple model for managing a library's book records.
+
+```
+from odoo import models, fields
+
+class LibraryBook(models.Model):
+    _name = 'library.book'
+    _description = 'Library Book'
+
+    name = fields.Char("Title", required=True)
+    author = fields.Char("Author")
+    isbn = fields.Char("ISBN")
+    date_published = fields.Date("Date Published")
+    # Other fields such as category, publisher, etc.
+```
+### Explanation
+- _name: This is the technical name of the model, which is also the name of the database table.
+- _description: Provides a human-readable description of the model.
+name, author, isbn, date_published: These are fields in the model. Each field is mapped to a column in the database table.
+Usage
+- CRUD Operations: These models support Create, Read, Update, and Delete operations.
+- Form and List Views: They are often linked with form and list views in Odoo's UI for user interaction.
+- Business Workflows: Used to manage and automate business processes (like tracking books in a library in this example).
+
+> Regular models are a fundamental part of Odoo's framework, enabling the development of complex business applications by providing a robust and flexible way to handle data and business logic.
+
