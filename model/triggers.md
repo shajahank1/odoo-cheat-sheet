@@ -270,4 +270,53 @@ This method calculates the total_amount by summing the price_total of each order
 > You can use computed fields to display data such as ratios, sums, averages, or any other aggregate or derived information based on data in your Odoo models.
 > Computed fields are a powerful feature in Odoo, enabling the display of dynamic and derived data without the need for storing additional data in the database, thereby keeping the database normalized and efficient.
 
+## @api.onchange
+> In Odoo, @api.onchange is used to dynamically update form views in response to changes made by the user. This feature is particularly useful for providing instant feedback in the UI based on user inputs.
+
+### Functionalities and Properties of @api.onchange
+- Dynamic UI Update: Triggers a function when the value of a field in the form view is modified.
+- Not Stored in Database: Changes made by onchange methods are not immediately committed to the database. They only affect the current view until saved.
+- Client-Side Behavior: Primarily used for enhancing user experience by updating other parts of the form in real-time.
+- Avoid Complex Operations: It's generally best to avoid heavy computations or database writes in onchange methods, as they are executed frequently.
+### Implementation of @api.onchange
+Basic Structure
+```
+@api.onchange('field1', 'field2')
+def onchange_method(self):
+    # Logic to execute when field1 or field2 changes
+```
+Example: Dynamic Form Update Based on a Field
+Consider a sales order form where selecting a customer should automatically update the delivery address field.
+
+```
+from odoo import models, fields, api
+
+class SaleOrder(models.Model):
+    _name = 'sale.order'
+
+    customer_id = fields.Many2one('res.partner', string="Customer")
+    delivery_address = fields.Char(string="Delivery Address")
+
+    @api.onchange('customer_id')
+    def _onchange_customer_id(self):
+        if self.customer_id:
+            self.delivery_address = self.customer_id.address
+```
+In this example, when a user selects a customer in the sales order form, the delivery_address field is automatically updated to match the address of the selected customer.
+
+### Usage in Practice
+- Form View Customization: Use onchange to auto-fill or clear fields based on user selections, or to display warnings and suggestions.
+- Conditional Visibility: While onchange can't directly hide or show fields, it can be used to set a field value that a conditional attrs attribute uses to hide or show another field.
+### Types of Onchange Methods
+- Field-Specific Onchange: Triggered by changes to a specific field.
+- Multiple Fields Onchange: Can depend on multiple fields, reacting to changes in any of them.
+### How to Use Them
+- Define Relevant Fields: In the decorator, specify which fields should trigger the onchange method.
+- Consider User Workflow: Design your onchange methods to reflect typical user interactions and workflows in your application.
+- Test Thoroughly: Ensure that your onchange methods work as expected in various scenarios, especially in complex forms with interdependent fields.
+> onchange methods are a key part of creating a responsive and intuitive user interface in Odoo applications. They allow for real-time interaction and feedback within forms, improving the overall user experience.
+
+
+
+
 
