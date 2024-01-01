@@ -140,3 +140,87 @@ def _check_age(self):
 - Constrains: For validating data before saving to the database.
 > Each of these attributes plays a distinct role in Odoo development, contributing to the creation of dynamic, interactive, and reliable business applications.
 
+# depends vs compute
+In Odoo, @api.depends and compute are closely related concepts used in conjunction with each other for computed fields, but they serve distinct roles:
+
+## 1. @api.depends
+- Purpose: The @api.depends decorator is used to specify which fields a computed field depends on. It determines when the computation method should be triggered.
+- Functionality: When any of the fields specified in @api.depends are modified, Odoo knows to recompute the computed field.
+- Usage: It is essential for ensuring that computed fields are recalculated at the right time, maintaining accuracy and data integrity.
+Example:
+```
+@api.depends('line_ids.price')
+def _compute_total_price(self):
+    ...
+```
+Here, _compute_total_price will be called whenever the price field of any record in line_ids is changed.
+## 2. compute
+- Purpose: The compute attribute in a field definition is used to link that field to a specific method for its calculation.
+- Functionality: This method is the actual computation logic and is executed to determine the field's value.
+- Usage: It is crucial for defining how the value of a computed field is obtained.
+Example:
+```
+total_price = fields.Float(compute='_compute_total_price')
+```
+This links the total_price field to the _compute_total_price method for its value.
+### Relationship and Usage
+> When defining a computed field, compute is used to specify the method that calculates the field's value, while @api.depends is used to declare the dependencies that trigger this computation.
+> Both are used together to create dynamic and automatically updated fields based on other field values within the record or related records.
+> The combination of compute and @api.depends ensures that computed fields are updated in real-time as dependent data changes, providing up-to-date and accurate information.
+> In summary, compute specifies the method to calculate a field's value, while @api.depends defines when this calculation should occur by listing the field dependencies. Both are essential for the effective use of computed fields in Odoo.
+
+## @api.depends
+
+> In Odoo, the @api.depends decorator is used primarily with computed fields to specify the dependencies that determine when the computation should be triggered. However, there's a common misconception about different "types" of @api.depends. In reality, @api.depends is a single concept with flexible usage depending on the fields you specify as dependencies. Let's clarify its attributes and functionalities:
+
+### Basic Usage of @api.depends
+Single Field Dependency: You can specify a single field upon which the computation depends.
+
+```
+@api.depends('field_name')
+def _compute_method(self):
+    ...
+```
+Here, the compute method is triggered whenever field_name changes.
+
+### Multiple Field Dependencies: You can specify multiple fields as dependencies.
+
+```
+@api.depends('field1', 'field2', 'field3')
+def _compute_method(self):
+    ...
+```
+The compute method will be triggered if any of field1, field2, or field3 change.
+
+### Related Model Field Dependencies: It also supports dot notation for specifying related model fields.
+
+```
+@api.depends('related_model_id.field_name')
+def _compute_method(self):
+    ...
+```
+The method is triggered when field_name in the related record (related_model_id) changes.
+
+### Advanced Usage
+Deep Dependencies: Odoo supports deep dependencies that span across relational fields.
+```
+@api.depends('line_ids.product_id.price')
+def _compute_total(self):
+    ...
+```
+In this case, the compute method depends on the price field of the product_id in each line record.
+
+### Chained Dependencies: Dependencies can be chained across several models.
+
+```
+@api.depends('partner_id.country_id.currency_id.rate')
+def _compute_currency_rate(self):
+    ...
+```
+Here, changes in the currency rate of a partner's country will trigger the compute method.
+
+### Functionality and Considerations
+- Recalculation: Computed fields are recalculated immediately and automatically when any of the fields specified in @api.depends are modified.
+- Performance: Specifying unnecessary dependencies can lead to performance issues due to frequent recalculations. It's essential to include only those fields that directly affect the computed value.
+- Data Integrity: Accurately specifying dependencies ensures that the computed fields always reflect the current state of their dependent data.
+> In summary, @api.depends is a versatile tool in Odoo's ORM, allowing developers to define precise conditions under which a computed field should be recalculated. By properly utilizing this functionality, developers can ensure that their applications always display up-to-date information without unnecessary computations.
