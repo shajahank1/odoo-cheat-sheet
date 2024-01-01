@@ -61,24 +61,21 @@ Form views are central to the user experience in Odoo, offering a flexible and d
 ## Layout Control
 In Odoo, layout control in form views is crucial for organizing information in a user-friendly and logical manner. It involves structuring the view using various elements such as <group>, <notebook>, <page>, and more. Each of these elements plays a specific role in how the data is presented to the user.
 
-Elements for Layout Control
-<group>:
-
+### Elements for Layout Control
+**<group>:**
 Purpose: Used to group related fields together. This is beneficial for organizing information logically and improving readability.
 Example:
-xml
-Copy code
+```
 <group>
     <field name="name"/>
     <field name="date_of_birth"/>
 </group>
+```
 Here, the fields name and date_of_birth are grouped together, possibly under a label like 'Personal Details'.
-<notebook> and <page>:
-
-Purpose: Notebooks create a tabbed interface, and pages are individual tabs within the notebook. This is useful for separating information into different sections without overwhelming the user with too much information at once.
-Example:
-xml
-Copy code
+**<notebook> and <page>:**
+**Purpose:** Notebooks create a tabbed interface, and pages are individual tabs within the notebook. This is useful for separating information into different sections without overwhelming the user with too much information at once.
+**Example:**
+```
 <notebook>
     <page string="Personal Information">
         <group>
@@ -93,36 +90,36 @@ Copy code
         </group>
     </page>
 </notebook>
+```
 This separates personal and professional information into two different tabs.
-<sheet>:
+**<sheet>:**
 
-Purpose: Used as a container for the main content of the form. It provides a standardized padding and layout.
-Example:
-xml
-Copy code
+**Purpose**: Used as a container for the main content of the form. It provides a standardized padding and layout.
+**Example**:
+```
 <sheet>
     <group>
         <field name="name"/>
         <!-- Other fields -->
     </group>
 </sheet>
-<header>:
+```
+**<header>:**
 
-Purpose: Typically contains action buttons and status bars.
-Example:
-xml
-Copy code
+**Purpose**: Typically contains action buttons and status bars.
+**Example**:
+```
 <header>
     <button string="Confirm" type="object" name="action_confirm"/>
     <field name="state" widget="statusbar"/>
 </header>
-Layout Customization
-Flexible Design: You can nest groups within groups or pages for more complex layouts.
-Conditional Visibility: Using the attrs attribute, you can dynamically show or hide groups or fields based on certain conditions.
-Styling: Additional attributes like colspan and col in groups can be used to control the layout further.
-Example of a Complete Form View Layout
-xml
-Copy code
+```
+### Layout Customization
+- Flexible Design: You can nest groups within groups or pages for more complex layouts.
+- Conditional Visibility: Using the attrs attribute, you can dynamically show or hide groups or fields based on certain conditions.
+- Styling: Additional attributes like colspan and col in groups can be used to control the layout further.
+**Example of a Complete Form View Layout**
+```
 <form>
     <header>
         <!-- Action buttons and status bar -->
@@ -140,8 +137,9 @@ Copy code
         </group>
     </sheet>
 </form>
-Usage
-This layout control is vital in all forms across Odoo, from sales orders and employee forms to project tasks and inventory items.
+```
+### Usage
+> This layout control is vital in all forms across Odoo, from sales orders and employee forms to project tasks and inventory items.
 A well-structured form improves user experience by making data entry and viewing more intuitive.
 Layout control in Odoo forms is about arranging information in a way that's logical, easy to navigate, and visually appealing. This organization is key to creating effective, user-friendly interfaces in Odoo applications.
 
