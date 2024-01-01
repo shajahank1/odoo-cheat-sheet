@@ -59,3 +59,44 @@ Here, res.partner is an existing model in Odoo, and CustomPartner extends it by 
 
 #### Conclusion
 > Models are the backbone of any Odoo application, defining the structure and behavior of the data that drives business processes. They are highly customizable, allowing developers to tailor the system to meet specific business needs.
+
+# Types of Model
+> In Odoo, models are crucial for representing data structures and business logic. There are several types of models, each serving different purposes and offering various functionalities:
+
+### Regular Models (models.Model):
+
+- Description: These are the standard models used for most data storage needs in Odoo. They correspond to database tables.
+- Usage: Used for storing persistent data like customers, products, orders, etc.
+- Example: Defining a product model to store product information.
+
+### Transient Models (models.TransientModel):
+
+- Description: These models are temporary and are used mainly for wizards. Data stored in transient models are automatically deleted after a certain period or upon the user's session termination.
+- Usage: Ideal for temporary data storage, like wizard forms that don't need permanent data persistence.
+- Example: A setup wizard that guides a user through initial configuration steps.
+
+### Abstract Models (models.AbstractModel):
+
+- Description: These models are used as base models. They don't correspond to a database table and are used to share common functionalities between models.
+- Usage: Useful for creating generic behaviors that can be reused in other models.
+- Example: A mixin model providing a common set of fields and methods for different models.
+
+### SQL View Models (models.Model with _auto = False):
+
+- Description: These models are based on SQL views instead of regular tables. They're read-only and useful for reporting or complex queries.
+- Usage: When you need to present data aggregated from multiple tables or with complex joins.
+- Example: A reporting model that aggregates sales data from multiple tables for analysis.
+
+### Mail Thread Models (models.Model with _inherit = ['mail.thread']):
+
+- Description: These models inherit from mail.thread and are integrated into Odoo’s messaging system.
+- Usage: For models where you want to attach mails, logs, and notifications.
+- Example: Customer model with email integration for communication tracking.
+- 
+### Delegated Inheritance Models:
+
+- Description: This is a type of model inheritance in Odoo where a model inherits fields and behaviors from another but stores data in a separate table.
+- Usage: When you want to extend an existing model without altering the original model's database structure.
+- Example: Extending a user model to add additional fields specific to a module.
+
+> Each type of model serves specific needs within an Odoo application, offering flexibility and robustness in designing the system's architecture and functionality. The choice of model type depends on the data persistence requirements, the relationship with other models, and the specific business logic that needs to be implemented.
