@@ -61,7 +61,7 @@ class SaleOrder(models.Model):
             record.total_amount = sum(line.price_total for line in record.order_line_ids)
 ```
 In this example, total_amount is computed as the sum of price_total of all related order_line_ids.
-### 2. Onchange Methods
+### 5. Onchange Methods
 - Purpose: Used to dynamically change the form view based on changes in certain fields.
 - Functionality: When the value of a field in the form view is modified, methods decorated with @api.onchange are triggered. This can be used to update other fields in the view.
 **Example:**
@@ -72,7 +72,7 @@ def _onchange_partner_id(self):
         self.address = self.partner_id.address
 ```
 Here, changing partner_id in a form view will automatically update the address field.
-### 3. Constraints (Python)
+### 6. Constraints (Python)
 - Purpose: Used for data validation.
 - Functionality: Constraints are methods that are called before creating or writing to a record. They are used to ensure that the data meets certain criteria.
 - @api.constrains Decorator: This is used to define constraint methods. If the constraint is violated, Odoo will raise an error.
