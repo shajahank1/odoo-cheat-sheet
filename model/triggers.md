@@ -41,13 +41,12 @@ def unlink(self):
     return result
 ```
 
-1. Compute Methods for Computed Fields
-Purpose: Used to define fields whose value is calculated on the fly from other fields.
-Functionality: A computed field executes its compute method whenever the system needs to determine its value.
-@api.depends Decorator: This is used to specify which fields the computed field depends on. Odoo tracks changes to these fields and updates the computed field accordingly.
-Example:
-python
-Copy code
+### 4. Compute Methods for Computed Fields
+- Purpose: Used to define fields whose value is calculated on the fly from other fields.
+- Functionality: A computed field executes its compute method whenever the system needs to determine its value.
+- @api.depends Decorator: This is used to specify which fields the computed field depends on. Odoo tracks changes to these fields and updates the computed field accordingly.
+**Example:**
+```
 from odoo import models, fields, api
 
 class SaleOrder(models.Model):
@@ -60,32 +59,34 @@ class SaleOrder(models.Model):
     def _compute_total_amount(self):
         for record in self:
             record.total_amount = sum(line.price_total for line in record.order_line_ids)
+```
 In this example, total_amount is computed as the sum of price_total of all related order_line_ids.
-2. Onchange Methods
-Purpose: Used to dynamically change the form view based on changes in certain fields.
-Functionality: When the value of a field in the form view is modified, methods decorated with @api.onchange are triggered. This can be used to update other fields in the view.
-Example:
-python
-Copy code
+### 2. Onchange Methods
+- Purpose: Used to dynamically change the form view based on changes in certain fields.
+- Functionality: When the value of a field in the form view is modified, methods decorated with @api.onchange are triggered. This can be used to update other fields in the view.
+**Example:**
+```
 @api.onchange('partner_id')
 def _onchange_partner_id(self):
     if self.partner_id:
         self.address = self.partner_id.address
+```
 Here, changing partner_id in a form view will automatically update the address field.
-3. Constraints (Python)
-Purpose: Used for data validation.
-Functionality: Constraints are methods that are called before creating or writing to a record. They are used to ensure that the data meets certain criteria.
-@api.constrains Decorator: This is used to define constraint methods. If the constraint is violated, Odoo will raise an error.
-Example:
-python
-Copy code
+### 3. Constraints (Python)
+- Purpose: Used for data validation.
+- Functionality: Constraints are methods that are called before creating or writing to a record. They are used to ensure that the data meets certain criteria.
+- @api.constrains Decorator: This is used to define constraint methods. If the constraint is violated, Odoo will raise an error.
+**Example:**
+```
 @api.constrains('age')
 def _check_age(self):
     for record in self:
         if record.age < 18:
             raise ValidationError("Age must be greater than 18")
+```
 This example ensures that the age field value is always greater than 18.
-These functionalities allow for a high degree of interactivity and data integrity within Odoo applications, ensuring that the user interface is dynamic and that the data stored in the database is consistent and valid.
+
+> These functionalities allow for a high degree of interactivity and data integrity within Odoo applications, ensuring that the user interface is dynamic and that the data stored in the database is consistent and valid.
 
 #### Use Cases and Best Practices
 - Data Validation: Implement checks and validations before creating or updating records.
