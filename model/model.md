@@ -226,4 +226,61 @@ In this setup, YourModel will automatically have created_on and updated_on field
 > Abstract models are a powerful tool in the Odoo framework, enabling developers to create modular, reusable, and maintainable code by sharing common functionalities across different models.
 
 
+## SQL View Models (models.Model with _auto = False):
+> SQL View Models in Odoo, created by setting _auto = False in a models.Model class, are designed to map the model to an SQL view instead of a regular database table. These models are particularly useful for reporting and data analysis purposes, as they allow you to create complex queries and aggregations that would be difficult or inefficient to achieve with regular models.
 
+### Key Characteristics of SQL View Models
+- Read-Only: They are typically read-only and don’t support writing data back to the database.
+- No Corresponding Table: No database table is created. Instead, they are linked to an SQL view.
+- Complex Queries: Ideal for complex SQL queries that aggregate data from multiple tables.
+### Defining an SQL View Model
+#### Step 1: Create the SQL View
+> You first need to create an SQL view in your database. This is usually done in the init method of the model.
+
+#### Step 2: Defining the Model
+> Once the SQL view is created, you define an Odoo model that maps to this view. This model is defined like a regular Odoo model, but with _auto = False to prevent Odoo from trying to create a corresponding table in the database. Instead, the model will use the SQL view you defined.
+
+**Python Model Example**
+```
+from odoo import models, fields, api
+
+class ReportModel(models.Model):
+    _name = 'report.model'
+    _description = 'Report Model'
+    _auto = False  # No table will be created for this model
+
+    # Define fields that match the columns of your SQL view
+    field1 = fields.Char("Field 1")
+    field2 = fields.Integer("Field 2")
+
+    @api.model_cr
+    def init(self):
+        # SQL code to create the view
+        tools.drop_view_if_exists(self.env.cr, 'report_model')
+        self.env.cr.execute("""
+            CREATE OR REPLACE VIEW report_model AS (
+                SELECT
+                    ...
+                FROM
+                    ...
+            )
+        """)
+```
+In this example:
+
+_name: The technical name of the model.
+_auto = False: Indicates that this is an SQL view model.
+init: A method where the SQL view is created. The view should be defined with a CREATE OR REPLACE VIEW statement.
+### Usage
+- Reporting and Analysis: This model can now be used for reporting and analysis purposes. For example, in creating report views, pivot tables, or graphs in Odoo.
+- Data Aggregation: Useful in scenarios where data needs to be aggregated or calculated from various sources or tables.
+Considerations
+- Read-Only Nature: Since SQL view models are typically read-only, they are not suitable for scenarios where you need to create, modify, or delete records.
+- Database Dependency: The SQL code in the init method depends on your database structure, so it might need adjustments if the underlying database tables change.
+0 Odoo ORM Limitations: Complex operations that are not supported by Odoo's ORM can be handled in SQL view models.
+SQL view models provide a powerful way to handle complex data operations and reporting in Odoo, enabling efficient data processing and analysis.
+
+### Further Usage and Integration
+- Views and Actions: You can create form, tree, search, and other views for this model and define actions and menu items to access these views, just like you would with a regular Odoo model.
+- Read-Only Operations: Since the model is typically read-only, it's used for reporting and data analysis purposes, where you don't need to modify the underlying data.
+- By following these steps, you can leverage SQL View Models in Odoo to handle complex data queries that are not easily achievable through standard ORM methods, making them ideal for reporting and analysis tools within your Odoo applications.
