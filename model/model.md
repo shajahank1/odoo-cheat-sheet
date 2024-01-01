@@ -284,3 +284,55 @@ SQL view models provide a powerful way to handle complex data operations and rep
 - Views and Actions: You can create form, tree, search, and other views for this model and define actions and menu items to access these views, just like you would with a regular Odoo model.
 - Read-Only Operations: Since the model is typically read-only, it's used for reporting and data analysis purposes, where you don't need to modify the underlying data.
 - By following these steps, you can leverage SQL View Models in Odoo to handle complex data queries that are not easily achievable through standard ORM methods, making them ideal for reporting and analysis tools within your Odoo applications.
+
+## Mail Thread Models in Odoo
+> Mail Thread Models in Odoo, created by inheriting from mail.thread in a models.Model class, are used to integrate models with Odoo's messaging and notification system. This feature allows records of the model to have functionalities like messaging, emails, followers, and logging activities.
+
+### Key Characteristics of Mail Thread Models
+- Messaging and Communication: These models can send and receive messages, and can be integrated with email.
+- Threaded Discussions: They support threaded discussions, where each record can have its own conversation history.
+- Automatic Logging: Actions like creating, editing, or deleting records can be automatically logged in the record's chatter.
+- Followers: Users can follow records to receive notifications about new messages or changes.
+### Example of a Mail Thread Model
+Let's consider an example where you create a custom model for managing projects, and you want to integrate it with the mail system for communication and logging.
+
+```
+from odoo import models, fields
+
+class CustomProject(models.Model):
+    _name = 'custom.project'
+    _description = 'Custom Project'
+    _inherit = ['mail.thread']
+
+    name = fields.Char("Project Name", required=True, track_visibility='onchange')
+    description = fields.Text("Description")
+    # Other project-specific fields
+```
+### Explanation
+- _inherit = ['mail.thread']: This line integrates the model with Odoo's mail thread functionality.
+- track_visibility='onchange': This attribute in the field definition enables tracking changes to the field, so modifications are logged in the chatter.
+### Usage
+- Project Management: In this example, each custom.project record can have messages and logs attached to it. Team members can communicate through the chatter attached to each project.
+- Change Tracking: Changes to the project's name will be automatically logged, providing a history of modifications.
+- Notifications: Users can follow a project to receive notifications about updates.
+Integration in Views
+To fully utilize the mail thread functionalities, you need to include the chatter in the form view:
+
+```
+<record id="view_form_custom_project" model="ir.ui.view">
+    <field name="name">custom.project.form</field>
+    <field name="model">custom.project</field>
+    <field name="arch" type="xml">
+        <form>
+            <!-- Your form fields -->
+            <div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
+        </form>
+    </field>
+</record>
+```
+### Conclusion
+?
+> Mail Thread Models are an integral part of many Odoo applications, providing a robust framework for communication, tracking, and notifications directly linked to records. This functionality enhances collaboration and record-keeping, making it a valuable feature for a wide range of business applications.
