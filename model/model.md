@@ -138,3 +138,36 @@ Usage
 
 > Regular models are a fundamental part of Odoo's framework, enabling the development of complex business applications by providing a robust and flexible way to handle data and business logic.
 
+## Transient Models (models.TransientModel)
+> Transient Models in Odoo, defined by inheriting from models.TransientModel, are used for temporary data that doesn't need to be stored permanently in the database. These models are ideal for wizard-like functionalities where you need to ask the user for information or provide a multi-step form, but you don't need to keep the data once the operation is completed.
+
+### Key Characteristics of Transient Models
+- Temporary Storage: Data stored in transient models is temporary and will be automatically cleaned up by Odoo.
+- Similar Structure to Regular Models: They are defined similarly to regular models (models.Model) but inherit from models.TransientModel.
+- Not Linked to Database Tables: While they have fields and behaviors like regular models, they don't correspond to a permanent table in the database.
+**Example of a Transient Model**
+Consider a scenario where you need a wizard to allow users to configure some settings or to input data that isn’t stored permanently.
+
+```
+from odoo import models, fields
+
+class LibraryBookReturnWizard(models.TransientModel):
+    _name = 'library.book.return.wizard'
+    _description = 'Library Book Return Wizard'
+
+    return_date = fields.Date("Return Date")
+    condition = fields.Selection([
+        ('good', 'Good'),
+        ('damaged', 'Damaged')
+    ], string="Book Condition")
+    # Other temporary fields for the wizard
+```
+
+### Explanation
+- _name and _description: Similar to regular models, these define the technical name and description.
+- return_date and condition: These fields are used to temporarily store the data input by the user. For example, the date when a book is returned and its condition.
+### Usage
+- Wizards and Temporary Data Collection: Often used for wizards that guide users through a process or collect information temporarily.
+- No Permanent Impact on Database: Ideal for scenarios where the data doesn't need to be stored long-term.
+
+> Transient models are a powerful feature for creating interactive user experiences that require temporary data processing, without the overhead of permanent data storage and database table management.
