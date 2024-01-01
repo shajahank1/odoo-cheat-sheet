@@ -127,3 +127,51 @@ Odoo's ORM (Object-Relational Mapping) automatically handles the conversion betw
 - Usage: Useful for monitoring and logging changes in important fields.
 
 > Each of these attributes provides specific functionality to the field, allowing for detailed control over how data is entered, displayed
+
+
+# Automatic Fields
+> Odoo automatically creates and manages certain fields in all models, known as automatic fields. These fields provide essential information about the record's creation, modification, and relational data. Here are the key automatic fields in Odoo:
+
+### id:
+- Description: A unique identifier for each record. It's the primary key in the database table.
+- Usage: Automatically handled by Odoo; used to reference records uniquely.
+
+### create_uid:
+- Description: The user who created the record.
+- Type: Many2one relationship linking to the res.users model.
+- Usage: Useful for tracking which user created a specific record.
+
+### create_date:
+- Description: The date and time when the record was created.-
+- Type: Datetime field.
+- Usage: Automatically set by Odoo; helpful for auditing and historical data tracking.
+
+### write_uid:
+- Description: The user who last updated the record.
+- Type: Many2one relationship linking to the res.users model.
+- Usage: Used to identify the user responsible for the last modification.
+
+### write_date:
+- Description: The date and time when the record was last updated.
+- Type: Datetime field.
+- Usage: Set by Odoo whenever a record is written to; useful for tracking modifications.
+
+### __last_update:
+- Description: A special field that indicates the last modification time of the record.
+- Type: Datetime field, essentially a mirror of write_date.
+- Usage: Often used in views and client-side logic to determine if a record has been modified.
+**Example**
+When you define a new model in Odoo, these automatic fields are implicitly present and managed by the system. For instance:
+
+```
+from odoo import models, fields
+
+class CustomModel(models.Model):
+    _name = 'custom.model'
+    name = fields.Char("Name")
+```
+    # No need to explicitly declare automatic fields like create_date, write_date, etc.
+> In this example, CustomModel will have create_uid, create_date, write_uid, write_date, and id fields automatically, even though they are not explicitly declared.
+
+### Usage
+> These automatic fields are widely used in Odoo for auditing, security, data integrity, and synchronizing data with external systems. They provide a built-in mechanism to track the creation and modification of records, which is crucial for enterprise applications.
