@@ -171,3 +171,59 @@ class LibraryBookReturnWizard(models.TransientModel):
 - No Permanent Impact on Database: Ideal for scenarios where the data doesn't need to be stored long-term.
 
 > Transient models are a powerful feature for creating interactive user experiences that require temporary data processing, without the overhead of permanent data storage and database table management.
+
+## Abstract Models (models.AbstractModel)
+> Abstract Models in Odoo, defined by inheriting from models.AbstractModel, are used as base models to provide shared functionalities across multiple models. They act as mixins, offering a way to define common fields and methods once and then reuse them in other models.
+
+### Key Characteristics of Abstract Models
+- No Database Table: Unlike regular models, abstract models do not create a database table. They are used purely for extending functionality.
+- Reusable Components: Abstract models are ideal for defining common behavior or fields that can be shared across different models.
+- Mixin Concept: They follow the mixin concept, allowing multiple inheritance and reuse of components.
+### Example of an Abstract Model
+Imagine you have a requirement where multiple models in your application need a set of common features, like audit logging. Instead of repeating the same code in each model, you can create an abstract model that encapsulates this common functionality.
+
+```
+from odoo import models, fields
+
+class AuditMixin(models.AbstractModel):
+    _name = 'audit.mixin'
+    _description = 'Audit Mixin'
+
+    created_on = fields.Datetime("Created On", readonly=True, default=lambda self: fields.Datetime.now())
+    updated_on = fields.Datetime("Updated On", readonly=True)
+
+    @api.model
+    def create(self, vals):
+        record = super(AuditMixin, self).create(vals)
+        # Additional logic for 'create' operation
+        return record
+
+    def write(self, vals):
+        vals['updated_on'] = fields.Datetime.now()
+        return super(AuditMixin, self).write(vals)
+```
+### Explanation
+- _name: The technical name of the mixin.
+- created_on and updated_on: Fields to track the creation and update times of records.
+- Overriding create and write: Methods to add custom logic during record creation and updates.
+### Usage in Other Models
+You can inherit this mixin in other models to provide them with automatic audit logging capabilities.
+
+```
+class YourModel(models.Model):
+    _name = 'your.model'
+    _inherit = ['audit.mixin']
+
+    name = fields.Char("Name")
+    # Other specific fields for your model
+```
+In this setup, YourModel will automatically have created_on and updated_on fields, along with the custom create and write behaviors defined in AuditMixin.
+
+### Usage
+- Code Reusability and Organization: Abstract models promote DRY (Don't Repeat Yourself) principles, leading to cleaner and more maintainable code.
+- Flexibility: They offer a flexible way to extend the functionality of multiple models without database overhead.
+
+> Abstract models are a powerful tool in the Odoo framework, enabling developers to create modular, reusable, and maintainable code by sharing common functionalities across different models.
+
+
+
