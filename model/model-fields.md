@@ -72,3 +72,58 @@ tag_ids = fields.Many2many('product.tag', string="Tags")
 They are used in views (forms, lists, kanban, etc.) to display and edit data.
 Fields can also include additional parameters like required, readonly, help (for tooltips), and default (default values).
 Odoo's ORM (Object-Relational Mapping) automatically handles the conversion between these field types in Python and the corresponding types in the database, simplifying data manipulation and ensuring type safety. This makes it easy to develop business applications with complex data requirements.
+
+# Model Attributes
+> In Odoo, fields in models can have several attributes that define their behavior, appearance, and relationships. Here are some of the key attributes used with field definitions:
+
+### string:
+- Description: Human-readable label for the field, used in views.
+- Example: name = fields.Char(string="Name")
+- Usage: Determines how the field is labeled in the user interface.
+
+### required:
+- Description: If set to True, the field must be filled in by the user.
+- Example: email = fields.Char(string="Email", required=True)
+- Usage: Enforces data integrity by ensuring that important fields are not left blank.
+
+### readonly:
+- Description: If True, the field cannot be modified in the user interface.
+- Example: create_date = fields.Datetime(string="Created On", readonly=True)
+- Usage: Useful for displaying information that should not be edited, like system-generated timestamps.
+
+### default:
+- Description: Sets a default value for the field.
+- Example: state = fields.Selection([...], default='draft')
+- Usage: Initializes fields with a preset value when creating new records.
+
+### help:
+- Description: Provides a tooltip for the field in the user interface.
+- Example: age = fields.Integer(string="Age", help="Enter your age in years")
+- Usage: Useful for giving users hints or additional information about what the field represents.
+
+### index:
+- Description: If True, creates a database index for the field, which can improve search performance.
+- Example: email = fields.Char(string="Email", index=True)
+- Usage: Beneficial for fields that are frequently searched or used in filters.
+
+### store:
+- Description: Determines whether the field's value is stored in the database. Usually, computed fields are not stored unless specified.
+- Example: age = fields.Integer(compute='_compute_age', store=True)
+- Usage: Important for fields whose values need to be persistent and queryable.
+
+### compute:
+- Description: Specifies a method name that computes the field's value.
+- Example: full_name = fields.Char(compute='_compute_full_name')
+- Usage: Used for fields whose value is derived from other fields.
+
+### inverse:
+- Description: Defines a method that inversely sets the value of a computed field.
+- Example: full_name = fields.Char(compute='_compute_full_name', inverse='_set_full_name')
+- Usage: Allows computed fields to be writable, with the inverse method handling how changes are saved.
+
+### track_visibility:
+- Description: Tracks changes to the field value in the model's chatter.
+- Example: status = fields.Selection([...], track_visibility='onchange')
+- Usage: Useful for monitoring and logging changes in important fields.
+
+> Each of these attributes provides specific functionality to the field, allowing for detailed control over how data is entered, displayed
