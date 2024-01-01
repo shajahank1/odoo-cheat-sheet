@@ -301,4 +301,72 @@ Here, the custom-form-style class will apply the styles you defined to the group
 - Browser Caching: Sometimes, browsers cache CSS files, so you might need to clear the cache or use hard refresh to see the changes.
 - By following these steps, you can effectively implement custom styling for your Odoo modules, enhancing the look and feel of your application.
 
+# Display the Child Records in Master View
+
+> Displaying  child records or sub-records in a master form view in Odoo is typically achieved using One2many or Many2many fields. These fields represent relationships between models and allow the display of related records directly within a form view.
+
+**Here's a step-by-step guide on how to implement this:**
+
+### 1. Define the Models
+Suppose you have two models: master.model (the master record) and detail.model (the detail record). The detail.model should have a Many2one field linking back to the master.model.
+
+**Example Python Code for Models**
+```
+from odoo import models, fields
+
+class MasterModel(models.Model):
+    _name = 'master.model'
+    _description = 'Master Model'
+
+    name = fields.Char("Name")
+    detail_ids = fields.One2many('detail.model', 'master_id', string="Details")
+
+class DetailModel(models.Model):
+    _name = 'detail.model'
+    _description = 'Detail Model'
+
+    name = fields.Char("Name")
+    master_id = fields.Many2one('master.model', string="Master")
+    # other fields for details
+```
+In this setup, detail_ids is a One2many field in master.model that references detail.model.
+
+### 2. Modify the Master Model's Form View
+You will need to modify the form view of the master model to include the One2many field, which will display the related detail records.
+
+**Example XML Code for Form View**
+```
+<record id="view_form_master_model" model="ir.ui.view">
+    <field name="name">master.model.form</field>
+    <field name="model">master.model</field>
+    <field name="arch" type="xml">
+        <form>
+            <sheet>
+                <group>
+                    <field name="name"/>
+                    <field name="detail_ids">
+                        <tree editable="bottom">
+                            <field name="name"/>
+                            <!-- Other fields from detail.model -->
+                        </tree>
+                    </field>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
+```
+In this form view, the detail_ids field will display a list of related detail records. The editable="bottom" attribute allows inline editing of these records.
+
+### Usage
+When a user opens a record in master.model, they will see a list of related records from detail.model.
+They can view, add, edit, or delete detail records directly within the master record's form.
+### Considerations
+- Relationships: Ensure that the relationship fields (Many2one, One2many) are correctly set up in the models.
+- Access Rights: Consider the access rights and record rules for both master and detail models to ensure proper visibility and editing capabilities.
+- UI/UX: This approach provides a seamless way to manage related records without navigating away from the master record's form.
+
+> Displaying detail records within a master form view is a common and effective pattern in Odoo, enhancing data management and user experience by consolidating related information in a single interface.
+
+
 
