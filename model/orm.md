@@ -92,6 +92,56 @@ Example for Record Rules in XML:
 </record>
 ```
 Update the Module: Apply the changes by updating the module in Odoo.
+
+
+## 6.Onchange Methods:
+> Onchange methods in Odoo are a crucial feature for dynamic user interfaces in form views. They are used to automatically update or modify the form's fields based on changes made by the user. These methods provide immediate feedback and interaction in the UI without requiring a server round trip or saving the record.
+
+### Basic Concept of Onchange Methods:
+- Triggered by UI Changes: Onchange methods are triggered when the value of a field in a form view is modified.
+- Immediate Update: They allow for other fields in the form to be updated immediately based on the change.
+- Not Stored: Changes made by the onchange methods are temporary and exist only until the form is saved. If the form is closed without saving, changes made by onchange methods are lost.
+Usage and Functionalities:
+- Dynamic Adjustments: Onchange methods can be used to auto-fill or adjust values of other fields based on the input of one field. For example, selecting a customer in a sales order might automatically update the delivery address field.
+
+- Validation and Warnings: They can provide instant feedback, such as warnings or field value validation, before the user submits the form.
+
+- Enhanced User Experience: By providing immediate feedback, onchange methods greatly enhance the user experience, making the interface more intuitive and responsive.
+
+### Implementation:
+Onchange methods are defined in Odoo models (Python classes) and are decorated with @api.onchange.
+
+Example:
+Consider a scenario in a sales module where selecting a customer should automatically update the customer's delivery address and loyalty points.
+
+```
+from odoo import api, fields, models
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    loyalty_points = fields.Integer("Loyalty Points", readonly=True)
+
+    @api.onchange('partner_id')
+    def _onchange_partner_id(self):
+        if self.partner_id:
+            self.partner_shipping_id = self.partner_id.address_get(['delivery'])['delivery']
+            self.loyalty_points = self.partner_id.loyalty_points
+        else:
+            self.partner_shipping_id = False
+            self.loyalty_points = 0
+```
+In this example, the _onchange_partner_id method is triggered when the partner_id field changes. It updates the partner_shipping_id (delivery address) and loyalty_points fields based on the selected customer.
+
+### Key Points to Remember:
+- Not for Business Logic: Onchange methods are intended for UI interactions, not for enforcing business logic. Business rules should be implemented in other methods like constraints or compute methods.
+
+- Temporary Changes: Remember that changes made in onchange methods are not saved until the user saves the form.
+
+- Performance Consideration: Overusing onchange methods or writing heavy logic inside them can lead to performance issues. Keep the methods light and efficient.
+
+> Understanding and correctly implementing onchange methods is vital for creating dynamic and user-friendly forms in Odoo applications. They play a key role in making the UI interactive and responsive to user input.
+
 #### Best Practices
 - Thorough Testing: Ensure new rules do not overly restrict necessary access.
 - Documentation: Maintain clear documentation for future reference.
