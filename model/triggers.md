@@ -224,3 +224,50 @@ Here, changes in the currency rate of a partner's country will trigger the compu
 - Performance: Specifying unnecessary dependencies can lead to performance issues due to frequent recalculations. It's essential to include only those fields that directly affect the computed value.
 - Data Integrity: Accurately specifying dependencies ensures that the computed fields always reflect the current state of their dependent data.
 > In summary, @api.depends is a versatile tool in Odoo's ORM, allowing developers to define precise conditions under which a computed field should be recalculated. By properly utilizing this functionality, developers can ensure that their applications always display up-to-date information without unnecessary computations.
+
+## Explain Compute
+> In Odoo, computed fields are defined using the compute attribute in the field declaration. These fields are calculated on-the-fly using a specified method, allowing you to present data that is derived from other fields in your model or related models.
+
+### Functionalities and Properties of Computed Fields
+- Dynamic Calculation: Computed fields are not stored in the database by default (unless store=True is set). They are recalculated dynamically whenever accessed, based on their dependent fields.
+
+- Dependencies: The fields that a computed field depends on are specified using the @api.depends decorator. This ensures that the computed field is recalculated whenever any of its dependencies change.
+
+- Not Editable by Default: Typically, computed fields are read-only in the user interface. However, you can make them writable by providing an inverse function.
+
+- Use in Views: Computed fields can be used in Odoo views just like regular fields. They are particularly useful for displaying information that is derived from complex calculations.
+
+### Example: Implementing a Computed Field
+Consider a scenario where you have a sale.order model and you want to compute the total amount of all orders.
+
+#### Step 1: Define the Computed Field
+In your model, define a field with the compute attribute:
+
+```
+from odoo import models, fields, api
+
+class SaleOrder(models.Model):
+    _name = 'sale.order'
+    
+    order_line_ids = fields.One2many('sale.order.line', 'order_id', string="Order Lines")
+    total_amount = fields.Float(string="Total Amount", compute='_compute_total_amount')
+```
+Here, total_amount is the computed field.
+
+#### Step 2: Implement the Compute Method
+Define the method that performs the computation, using the @api.depends decorator to specify dependencies:
+
+```
+@api.depends('order_line_ids.price_total')
+def _compute_total_amount(self):
+    for record in self:
+        record.total_amount = sum(line.price_total for line in record.order_line_ids)
+```
+This method calculates the total_amount by summing the price_total of each order line.
+
+### Usage in Practice
+> In a sales application, the total amount of an order would be dynamically calculated based on the order lines, and this total could be displayed in the order form view.
+> You can use computed fields to display data such as ratios, sums, averages, or any other aggregate or derived information based on data in your Odoo models.
+> Computed fields are a powerful feature in Odoo, enabling the display of dynamic and derived data without the need for storing additional data in the database, thereby keeping the database normalized and efficient.
+
+
