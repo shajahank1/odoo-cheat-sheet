@@ -317,6 +317,7 @@ In this example, when a user selects a customer in the sales order form, the del
 > onchange methods are a key part of creating a responsive and intuitive user interface in Odoo applications. They allow for real-time interaction and feedback within forms, improving the overall user experience.
 
 
+https://www.odoo.com/documentation/17.0/developer/tutorials/getting_started/09_compute_onchange.html
 
 
 
