@@ -334,5 +334,45 @@ To fully utilize the mail thread functionalities, you need to include the chatte
 </record>
 ```
 ### Conclusion
-?
 > Mail Thread Models are an integral part of many Odoo applications, providing a robust framework for communication, tracking, and notifications directly linked to records. This functionality enhances collaboration and record-keeping, making it a valuable feature for a wide range of business applications.
+
+## Delegated inheritance Model
+> Delegated inheritance in Odoo, also known as prototype inheritance, is a type of model inheritance where a model inherits fields, methods, and behaviors from another model but stores its data in a separate database table. This is different from classical inheritance, where the inherited model extends the base model's database table.
+
+### Key Characteristics of Delegated Inheritance
+- Separate Database Tables: Both the base and inherited models have their own database tables.
+- Shared Fields and Methods: The inherited model has access to all fields, methods, and attributes of the base model.
+- Use of _inherits: This is achieved using the _inherits attribute in Odoo models.
+### Example of Delegated Inheritance
+Let's consider an example where you have a base model base.model and you want to create a specialized version of this model called specialized.model.
+
+**Base Model (base.model)**
+```
+from odoo import models, fields
+
+class BaseModel(models.Model):
+    _name = 'base.model'
+    _description = 'Base Model'
+
+    name = fields.Char("Name")
+    # Other fields and methods
+```
+**Inherited Model (specialized.model) using Delegated Inheritance**
+```
+class SpecializedModel(models.Model):
+    _name = 'specialized.model'
+    _description = 'Specialized Model'
+    _inherits = {'base.model': 'base_id'}
+
+    base_id = fields.Many2one('base.model', required=True, ondelete='cascade', auto_join=True)
+    specialized_field = fields.Char("Specialized Field")
+    # Additional fields and methods specific to the specialized model
+```
+### Explanation
+_inherits = {'base.model': 'base_id'}: This line indicates that SpecializedModel inherits from base.model. The base_id field is a Many2one field linking to base.model.  
+Data for SpecializedModel is stored in its own table, but it includes a reference to a record in the base.model table.
+Fields and methods from base.model are accessible in specialized.model, along with any additional fields/methods defined in specialized.model.
+### Usage
+- Scenario: Delegated inheritance is useful when you want to extend a model without modifying the base model's structure, especially when dealing with different types of similar records (e.g., different types of contacts like customers, suppliers, employees).
+- Data Integrity: The ondelete='cascade' in the Many2one field ensures that if the base record is deleted, the corresponding specialized record is also deleted.
+> Delegated inheritance allows for flexible and modular development in Odoo, enabling the creation of specialized models that maintain a clear and organized database structure. It's particularly useful for creating models that are an extension of existing models but with additional specific requirements or behaviors.
