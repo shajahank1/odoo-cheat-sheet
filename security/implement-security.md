@@ -1,4 +1,5 @@
 # Security in Odoo
+> Restrict access to data
 - https://www.odoo.com/documentation/17.0/developer/tutorials/getting_started/05_securityintro.html
 - https://www.odoo.com/documentation/17.0/developer/reference/backend/security.html#reference-security
 - https://www.odoo.com/documentation/17.0/developer/tutorials/restrict_data_access.html
