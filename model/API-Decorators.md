@@ -402,6 +402,48 @@ Example:
 def _compute_name(self):
     # Logic depending on the language
 ```
+> @api.depends_context is a decorator in Odoo's ORM (Object-Relational Mapping) system used for computed fields. It's specifically designed to indicate that the computation of a field depends not only on database content but also on the context in which the computation is performed.
+
+### Purpose of @api.depends_context:
+- Context-Sensitive Computation: Allows defining computed fields whose values depend on the current user's context. This is particularly useful when the computation depends on external factors like the user's timezone, language, or company.
+- Dynamic Recalculation: Ensures that the computed field is recalculated whenever the specified elements in the context change.
+#### How to Implement @api.depends_context:
+##### Basic Steps:
+- Define a Computed Field:
+In your Odoo model, define a field with the compute= parameter pointing to the method that computes its value.
+- Use @api.depends_context Decorator:  
+   Decorate the computation method with @api.depends_context, specifying the context keys that it depends on.  
+   This decorator is often used in conjunction with @api.depends.
+- Implement Context-Aware Logic:  
+-- Inside the method, implement the logic for the computed field, taking into account the specified elements of the context.  
+
+**Example:**
+Consider a scenario where you have a computed field in a sales order model (sale.order) that calculates the total amount in the user's preferred currency.
+
+```
+from odoo import api, fields, models
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    total_amount_user_currency = fields.Float(compute='_compute_total_amount_user_currency')
+
+    @api.depends('order_line.price_total', 'currency_id')
+    @api.depends_context('uid')
+    def _compute_total_amount_user_currency(self):
+        user_currency = self.env.user.company_id.currency_id
+        for order in self:
+            total_in_order_currency = sum(line.price_total for line in order.order_line)
+            order.total_amount_user_currency = total_in_order_currency * self.currency_id.rate / user_currency.rate
+```
+> In this example, the method _compute_total_amount_user_currency calculates total_amount_user_currency, a field that depends on the order_line.price_total and currency_id fields, as well as the user's context (uid). It computes the total order amount in the currency preferred by the current user.
+
+### Key Points to Remember:
+- Use for Contextual Calculations: Ideal for computations where the outcome depends on the user's environment or settings.
+- Combination with @api.depends: Often used alongside @api.depends to cover both database field changes and context changes.
+- Performance Consideration: Be mindful of the impact on performance, as context-dependent fields might need to be recalculated more frequently.
+> Implementing @api.depends_context is crucial for developing dynamic and context-sensitive applications in Odoo, ensuring that computed fields reflect the most relevant and up-to-date information based on the user's current context.
+
 ## 10. @api.ondelete
 **Trigger**: Before the deletion of records.
 **Functionality**: Used to define actions or checks before records are deleted, typically to prevent deletion under certain conditions.
