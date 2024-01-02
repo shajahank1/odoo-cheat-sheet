@@ -209,6 +209,47 @@ def _check_age(self):
     if self.age < 18:
         raise ValidationError("Age must be over 18.")
 ```
+> @api.constrains is a critical decorator in Odoo's ORM (Object-Relational Mapping) used to enforce business rules and data validation constraints at the model level. It's primarily used to ensure data integrity by validating field values whenever records are created or updated.
+
+### Purpose of @api.constrains:
+- Data Validation: Used to define methods that are automatically triggered to check certain conditions or constraints when records are created or updated.
+- Enforce Business Rules: Ensures that business rules are adhered to by raising exceptions if the defined constraints are not met.
+### How to Implement @api.constrains:
+#### Basic Steps:
+- Define a Method in a Model:
+In your Odoo model, create a method that encapsulates the logic for the constraint.
+This method should check whether the record meets specific conditions and raise exceptions if it doesn't.
+- Use @api.constrains Decorator:
+Decorate this method with @api.constrains, specifying the field names that, when changed, should trigger this validation.
+The method is automatically called after a record is created or these fields are updated.
+- Implement Validation Logic:
+Inside the method, implement the validation logic. Use ValidationError from odoo.exceptions to raise an error if the validation fails.
+**Example**:
+Suppose you have an Employee model, and you want to ensure that the email of each employee is unique across the company.
+
+```
+from odoo import api, models, exceptions
+
+class Employee(models.Model):
+    _name = 'my.employee'
+
+    email = fields.Char('Email')
+
+    @api.constrains('email')
+    def _check_email(self):
+        for record in self:
+            if self.search_count([('email', '=', record.email), ('id', '!=', record.id)]) > 0:
+                raise exceptions.ValidationError("Email must be unique per employee.")
+                
+```
+> In this example, _check_email ensures that the email field is unique across all my.employee records. If a duplicate email is found, a ValidationError is raised, preventing the record from being saved.
+
+### Key Points to Remember:
+- Triggered Automatically: The method is called automatically after a record is created or the specified fields are updated.
+- Exception Handling: Use ValidationError to provide a user-friendly error message.
+- Performance Consideration: Be mindful of the performance impact of the constraints, especially in scenarios involving large datasets or complex searches.
+> Implementing @api.constrains correctly is crucial for maintaining data integrity and enforcing business rules within Odoo applications, ensuring that all data conforms to specified requirements and conditions.
+
 ## 6. @api.returns
 **Trigger**: When the decorated method returns a value.
 **Functionality**: Defines the return type of a method, especially important for ensuring consistent return types.
