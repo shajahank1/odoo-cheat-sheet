@@ -454,6 +454,46 @@ def _check_linked_records(self):
     if self.linked_records.exists():
         raise UserError("Cannot delete record as it has linked records.")
 ```
+> @api.ondelete is a specialized decorator in Odoo's ORM (Object-Relational Mapping) used for handling cleanup or validation operations before records are deleted. This decorator is particularly useful when you need to perform certain checks or actions right before a record is permanently removed from the database.
+
+### Purpose of @api.ondelete:
+- Pre-Deletion Handling: It allows developers to define methods that are executed just before records are deleted.
+- Validation and Cleanup: Commonly used to check if it's safe to delete a record or to perform necessary cleanup tasks associated with the record being deleted.
+### How to Implement @api.ondelete:
+##### Basic Steps:
+- Define a Method in a Model:
+1. Create a method within your Odoo model that should be executed before record deletion.
+2. This method can include logic to check conditions or perform cleanup tasks.
+- Use @api.ondelete Decorator:
+1. Decorate this method with @api.ondelete.
+2. Optionally, you can specify at_uninstall=False to indicate that the method should not be executed when modules are uninstalled.
+- Implement Pre-Deletion Logic:
+1. Write the logic for actions to be taken before the deletion of the record. This often involves checks to prevent deletion under certain conditions, and if those conditions are met, raise an exception to stop the deletion.
+**Example:**
+Suppose you have a model project.task and you want to prevent the deletion of tasks if they are marked as 'Important'.
+
+```
+from odoo import api, models, exceptions
+
+class ProjectTask(models.Model):
+    _inherit = 'project.task'
+
+    is_important = fields.Boolean("Important")
+
+    @api.ondelete(at_uninstall=False)
+    def _check_important_task(self):
+        for task in self:
+            if task.is_important:
+                raise exceptions.UserError("Cannot delete a task marked as important.")
+```
+> In this example, the method _check_important_task is decorated with @api.ondelete. It checks if the project.task record is marked as 'Important'. If so, it raises a UserError, preventing the deletion of the task.
+
+### Key Points to Remember:
+- Use for Validation Before Deletion: It's ideal for enforcing business rules that determine whether a record can be safely deleted.
+- Exception Handling: If the conditions for safe deletion are not met, you should raise an exception to halt the deletion process.
+- Not for Cleanup After Deletion: This method is for pre-deletion checks, not for handling tasks after a record has been deleted.
+> Implementing @api.ondelete methods correctly is vital for maintaining data integrity and enforcing business logic in Odoo applications, particularly in scenarios where the deletion of records has significant implications
+
 ## 11. @api.autovacuum
 **Trigger**: Periodically, as part of the database cleanup job.
 **Functionality**: For scheduling automatic cleanup operations in models, like deleting old records or logs.
@@ -464,6 +504,47 @@ def _autovacuum_expired_records(self):
     # Logic to clean up old or expired records
 ```
 This guide provides a comprehensive overview of the @api decorators in Odoo, highlighting when
+
+> @api.autovacuum is a specific decorator in Odoo's ORM (Object-Relational Mapping) used for scheduling automated cleanup operations. It's particularly useful for managing tasks like clearing old records or performing regular maintenance activities that help in keeping the database optimized.
+
+### Purpose of @api.autovacuum:
+- Automated Cleanup: Allows for the definition of methods in models that are automatically executed by Odoo's scheduler for cleaning up old or irrelevant data.
+- Database Maintenance: Helps in maintaining database health by removing obsolete data, which can improve performance and reduce storage usage.
+### How to Implement @api.autovacuum:
+##### Basic Steps:
+- Define a Method in a Model:
+1. Create a method within your Odoo model intended for regular cleanup or maintenance tasks.
+2. This method should contain logic for identifying and removing/deactivating old or irrelevant records.
+- Use @api.autovacuum Decorator:
+1. Decorate this method with @api.autovacuum.
+2. There are no parameters required for this decorator.
+- Implement Cleanup Logic:
+1. Write the logic for the cleanup operation. This could involve searching for records that meet certain criteria (like being older than a specific date) and then deleting or archiving them.
+**Example:**
+Imagine you have a model my.model and you want to delete records that are older than a year.
+
+```
+from odoo import api, fields, models
+from datetime import timedelta
+
+class MyModel(models.Model):
+    _name = 'my.model'
+
+    create_date = fields.Datetime("Creation Date")
+
+    @api.autovacuum
+    def _clean_old_records(self):
+        one_year_ago = fields.Datetime.now() - timedelta(days=365)
+        old_records = self.search([('create_date', '<', one_year_ago)])
+        old_records.unlink()
+```
+> In this example, _clean_old_records is a method that searches for records in my.model that were created more than a year ago. These records are then deleted using the unlink() method. The @api.autovacuum decorator ensures that this method is called automatically as part of Odoo's regular cleanup job.
+
+### Key Points to Remember:
+- Scheduled Execution: The method is executed periodically based on Odoo's scheduler, not triggered by user actions.
+- Use for Regular Maintenance: Ideal for tasks like cleaning logs, removing temporary data, or archiving old records.
+- Careful Implementation: Ensure that the logic for identifying records is accurate and that you're only removing data that is safe to delete.
+> Implementing @api.autovacuum methods is a powerful way to automate maintenance tasks within Odoo applications, contributing to the overall health and efficiency of the system
 
 
 # @api.onchange vs @api.depends
