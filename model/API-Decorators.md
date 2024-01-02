@@ -115,6 +115,43 @@ Example:
 def _compute_total(self):
     self.total = self.field1 + self.field2
 ```
+@api.depends is a crucial decorator in Odoo's ORM (Object-Relational Mapping) used primarily for computed fields. This decorator specifies the fields that a computed field depends on, ensuring that the computed field is recalculated whenever any of the dependent fields are modified.
+
+### Purpose of @api.depends:
+Automatic Recalculation: It is used to automatically update the value of a computed field when any of the fields it depends on change.
+Dependency Tracking: Helps in maintaining data consistency and integrity by ensuring that changes in certain fields are reflected in related computed fields.
+### How to Implement @api.depends:
+#### Basic Steps:
+- Define a Computed Field:
+In your Odoo model, define a field with compute= parameter pointing to the method that computes its value.
+- Use @api.depends Decorator:
+Decorate the computation method with @api.depends, listing all the field names it should depend on.
+- Write the Computation Logic:
+Implement the logic to compute the field's value based on the dependent fields.
+**Example**:
+> Consider a sales order model (sale.order) where you need a computed field total_weight that calculates the total weight of the order based on the weights of individual order lines.
+
+```
+from odoo import api, fields, models
+
+class SaleOrder(models.Model):
+    _inherit = 'sale.order'
+
+    total_weight = fields.Float(compute='_compute_total_weight', string='Total Weight')
+
+    @api.depends('order_line', 'order_line.product_uom_qty', 'order_line.product_id.weight')
+    def _compute_total_weight(self):
+        for order in self:
+            order.total_weight = sum(line.product_uom_qty * line.product_id.weight for line in order.order_line)
+```
+> In this example, the method _compute_total_weight is decorated with @api.depends. It specifies that the computation depends on the order_line, as well as the product_uom_qty and weight fields of the products in each order line. Whenever these fields are modified, total_weight is automatically recalculated.
+
+### Key Points to Remember:
+- Use for Computed Fields: @api.depends is specifically used for fields that are computed, i.e., their value is calculated based on other fields.
+- Performance: Be mindful of the number of dependencies and complexity of computations to avoid performance issues.
+- Data Consistency: It ensures that the computed field always reflects the current state of its dependent fields, enhancing data integrity.
+Understanding @api.depends and its correct usage is essential for creating dynamic and responsive applications in Odoo, ensuring that computed fields are always up to date with their underlying data.
+
 ## 4. @api.onchange
 **Trigger**: In response to UI changes in form views, when the specified field(s) are modified.
 **Functionality**: Used to dynamically update other fields in the form based on changes in the UI, without saving the record.
