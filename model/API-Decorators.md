@@ -161,6 +161,44 @@ Example:
 def _onchange_field1(self):
     self.field2 = self.field1 * 2
 ```
+> @api.onchange is an essential decorator in Odoo's ORM (Object-Relational Mapping) used to create dynamic and interactive forms in Odoo's user interface. It's specifically designed for real-time interactivity within form views.
+
+### Purpose of @api.onchange:
+- Real-time UI Interaction: It's used to trigger Python methods in response to changes made by the user in form fields. The method can modify the values of other fields in the form based on this change.
+- Instant Feedback: Provides immediate feedback or interaction in the UI without needing to save the record or perform a server round trip.
+### How to Implement @api.onchange:
+#### Basic Steps:
+- Define a Method in a Model:
+In your Odoo model, create a method to be triggered when a specific field's value changes in the UI.
+This method should handle the logic of how other fields should be updated or validated based on the change.
+- Use @api.onchange Decorator:
+Decorate this method with @api.onchange, specifying the field names that, when changed, should trigger this method.
+- Implement UI Logic:
+Inside the method, implement the logic for updating other fields, showing warnings, or dynamically changing options based on the user's input.
+**Example**:
+Consider a scenario in a sales order where selecting a product should automatically update the unit price based on the product's current price.
+
+```
+from odoo import api, fields, models
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        if self.product_id:
+            self.price_unit = self.product_id.list_price
+        else:
+            self.price_unit = 0.0
+```
+> In this example, when the product_id field in a sale order line changes, the _onchange_product_id method is triggered. It updates the price_unit field with the product's list price. If no product is selected, it sets the price to 0.0.
+
+###  Points to Remember:
+- Temporary Changes: Changes made in an @api.onchange method are not immediately saved to the database. They only persist temporarily until the user saves the form.
+- User Experience: Use @api.onchange to enhance user experience by providing immediate feedback or dynamic content based on user actions.
+- Avoid Heavy Logic: Since these methods are triggered by UI interactions, it's advisable to avoid heavy computations to ensure a responsive user interface.
+> Implementing @api.onchange methods is essential for creating a dynamic and responsive user interface in Odoo applications, making them more intuitive and user-friendly.
+
 ## 5. @api.constrains
 **Trigger**: After creating or updating a record.
 **Functionality**: To enforce business rules and data validation. Raises exceptions if the conditions are not met.
