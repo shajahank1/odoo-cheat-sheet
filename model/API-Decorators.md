@@ -8,16 +8,104 @@ Example:
 def _default_field(self):
     return "Default Value"
 ```
+### Detailed Explanation
+> @api.model is one of the decorators provided by Odoo's ORM (Object-Relational Mapping) system, used for defining model methods. Understanding and implementing @api.model correctly is important for effective Odoo development.
+
+### Purpose of @api.model:
+- Class-Level Method: @api.model is used for defining methods that are relevant to the model as a whole, rather than any specific record. It's typically used for methods that operate on the class level.
+- No Recordset: Methods decorated with @api.model don't work on a recordset (self does not represent a record or recordset). Instead, self refers to the model class itself.
+- Common Use Cases: Commonly used for creating new records, returning default values, or performing actions that are not tied to a specific record.
+### How to Implement @api.model:
+#### Basic Implementation:
+##### Define a Method in a Model:
+
+> Within an Odoo model (a Python class that inherits from models.Model), you define a method.
+Decorate this method with @api.model.
+##### Method Logic:
+
+> Since self refers to the model class and not a recordset, the method logic should not assume any specific record.
+It can perform operations applicable to the model as a whole, like returning general data, defaults, or creating new records.
+**Example:**
+Suppose you have a model my.model and want to define a method that calculates and returns some default value for a field when a new record is being created.
+
+```
+from odoo import api, fields, models
+
+class MyModel(models.Model):
+    _name = 'my.model'
+
+    name = fields.Char('Name')
+    description = fields.Text('Description')
+
+    @api.model
+    def get_default_description(self):
+        # Logic to compute a default description
+        return "This is a default description."
+
+    @api.model
+    def create_new_record(self, vals):
+        # Logic to create a new record
+        vals.update({'description': self.get_default_description()})
+        return super(MyModel, self).create(vals)
+```
+> In this example, get_default_description is a method that computes and returns a default value for the description field. It is decorated with @api.model, signifying that it is a class method and does not operate on any specific record. The create_new_record method is another example that uses @api.model to create a new record with some default values.
+
+### Key Points to Remember:
+> Use @api.model for methods that do not need to operate on a specific record but instead work on a model level.
+These methods can be called without a recordset, and self in the method represents the model class, not any particular record.
+Ideal for utility functions, defaults, or creating records with specific criteria.
+Understanding @api.model and its correct implementation is vital for developing modular, scalable, and efficient Odoo applications.
+
 ## 2. @api.multi
 **Trigger**: Automatically, when called on a recordset. The default behavior in Odoo 10+.
-**Functionality**: Used for operating on multiple records. The self in the method is a recordset containing multiple records.
-Example:
+**Functionality**: Used for operating on multiple records. The self in the method is a recordset containing multiple records.  
+**Example**:
 ```
 @api.multi
 def process_records(self):
     for record in self:
         # Process each record
 ```
+> @api.multi is an important decorator in Odoo's ORM (Object-Relational Mapping) system, particularly relevant in the context of methods that are designed to operate on recordsets.
+
+### Purpose of @api.multi:
+- Multi-Record Operation: @api.multi indicates that the method is intended to operate on multiple records of a model. It is the default behavior for model methods in Odoo.
+Recordset Handling: When you decorate a method with @api.multi, self in the method context represents a recordset, which could be a single record or multiple records.
+-Common Use Cases: It's commonly used for actions where the same operation needs to be applied to several records, like updating fields in bulk or performing calculations on multiple records.
+### Implementation of @api.multi:
+#### Basic Steps:
+##### Define a Method in a Model:
+
+> Create a method within your Odoo model (a class extending models.Model).
+> Decorate this method with @api.multi. However, from Odoo 10 onwards, this is often implicit and can be omitted.
+#### Method Logic:
+
+> The method should be designed to handle a recordset (multiple records).
+> Common practice is to iterate over self to apply the operation to each record in the recordset.
+**Example:**
+Suppose you have a model product.product and want to define a method that updates the stock level for multiple products.
+
+```
+from odoo import api, fields, models
+
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+
+    stock_level = fields.Integer('Stock Level')
+
+    @api.multi
+    def update_stock_level(self, quantity):
+        for product in self:
+            product.stock_level += quantity
+```
+> In this example, update_stock_level is a method that increases the stock level of products. It iterates over self, which could be one or more product records. Each product's stock_level is updated by the specified quantity.
+
+### Key Points to Remember:
+> @api.multi is the default behavior for model methods from Odoo 10 onwards, so it's often not necessary to explicitly decorate methods with it.
+> Use @api.multi when your method is intended to operate on recordsets (multiple records).
+Always design the method's logic to handle multiple records gracefully, typically using a loop over self.
+> Understanding and correctly implementing @api.multi is essential for Odoo developers, especially when dealing with operations that affect multiple records. This approach aligns with the recordset concept in Odoo, enabling efficient and scalable data manipulation.
+
 ## 3. @api.depends
 **Trigger**: When any of the specified fields are modified.
 **Functionality**: For computed fields. It automatically recalculates the field value when dependencies change.
