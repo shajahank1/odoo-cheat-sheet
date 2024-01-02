@@ -1,4 +1,6 @@
 # Interacting with other modules
+https://www.odoo.com/documentation/17.0/developer/tutorials/getting_started/14_other_module.html
+
 Interacting with other modules in Odoo is a common requirement, especially when you want to extend or enhance the functionality of existing modules or when your module needs to work in tandem with others. This interaction can be achieved in several ways, such as inheriting from existing models, calling methods from other modules, or using module data.
 
 ## 1. Inheriting from Existing Models
