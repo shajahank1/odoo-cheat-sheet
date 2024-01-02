@@ -1,5 +1,7 @@
 # Security in Odoo
-https://www.odoo.com/documentation/17.0/developer/tutorials/getting_started/05_securityintro.html
+- https://www.odoo.com/documentation/17.0/developer/tutorials/getting_started/05_securityintro.html
+- https://www.odoo.com/documentation/17.0/developer/reference/backend/security.html#reference-security
+- https://www.odoo.com/documentation/17.0/developer/tutorials/restrict_data_access.html
 
 ### Overview
 > Odoo's robust security framework is designed to ensure data protection and controlled access at various levels within the application. This framework encompasses several mechanisms, including Model Level Access Rights, Record Rules, Field Level Access Rights, Views and Menus, Controller Level Security, and User Level Access Rights. Understanding and correctly implementing these mechanisms is crucial for safeguarding data and maintaining the integrity of the Odoo environment.
@@ -24,6 +26,40 @@ Purpose: Controls CRUD operations on models per user group.
 </record>
 ```
 Here, users in the 'Product Manager' group have full access to the product.template model.
+
+## Using CSV for Model Access Rights
+> CSV files for access rights typically define which user groups can perform CRUD (Create, Read, Update, Delete) operations on specific models.
+
+### Structure of CSV for Access Rights:
+- Model ID: The model to which the access rights apply.
+- Group ID: The user group these rights apply to.
+- Access Rights: Boolean values for read, write, create, and delete permissions.
+**Example:**
+Here is an example of a CSV file to define access rights:
+
+```
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_rule_sample,Sample Model Access,sample_module.model_sample_model,sample_module.group_sample_user,True,True,False,False
+```
+> In this example, users in the group_sample_user group can read and write sample_model records but can't create or delete them.
+
+## Implementing Access Rights Using CSV:
+- Create the CSV File:
+    Create a CSV file in the security/ directory of your module.  
+    Name it appropriately, like ir_model_access.csv.  
+- Define Access Rules:
+    Fill in the CSV with the necessary access rules.  
+    Add the CSV File to __manifest__.py:  
+- Include the CSV file in the data section of your module's __manifest__.py file:
+```
+'data': [
+    'security/ir_model_access.csv',
+    # other files
+],
+```
+- Update the Module:
+    Update your module in Odoo for the changes to take effect.   
+    Using CSV for Data Import/Export  
 
 ## 2. Record Rules
 Purpose: Row-level access control for records.
