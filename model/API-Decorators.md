@@ -104,5 +104,59 @@ def _autovacuum_expired_records(self):
 This guide provides a comprehensive overview of the @api decorators in Odoo, highlighting when
 
 
+# @api.onchange vs @api.depends
+> In Odoo, @api.onchange and @api.depends are two decorators used for different purposes in model development. Understanding their differences is crucial for effective use in Odoo applications.
+
+## @api.onchange
+**Purpose**:
+> @api.onchange is used in form views to provide real-time interactivity. It triggers Python methods in response to changes made by the user in the UI.
+## How it Works:
+When a field specified in the @api.onchange decorator is modified in the UI, the decorated method is called.
+The method can make changes to other fields in the view, which are reflected immediately in the UI.
+Changes are not saved to the database until the user explicitly saves the form.
+## Use Cases:
+Dynamically updating or setting values of other fields based on the user's input.
+Showing warnings or validation messages before the user submits the form.
+Enhancing user experience with immediate feedback based on their actions.
+Example:
+```
+@api.onchange('country_id')
+def _onchange_country_id(self):
+    self.city = 'Default City' if self.country_id.name == 'Country Name' else False
+```
+In this example, changing the country_id field updates the city field immediately in the UI.
+
+## @api.depends
+**Purpose**:
+> @api.depends is used to define dependencies for computed fields. It ensures that the computed field is automatically recalculated when any of the specified fields change.
+### How it Works:
+The method decorated with @api.depends is automatically called when any of the fields it depends on are altered.
+This is primarily used for fields that store their values in the database (when store=True).
+### Use Cases:
+Automatically recalculating a field when any of its dependencies change.
+Ensuring data consistency and integrity for computed fields.
+Example:
+```
+@api.depends('line_ids.price_total')
+def _compute_total(self):
+    self.total = sum(line.price_total for line in self.line_ids)
+```
+Here, _compute_total recalculates total whenever any price_total in line_ids changes, and total is stored in the database.
+
+### Key Differences:
+####Trigger Point:
+
+> @api.onchange is triggered by user actions in the UI.
+> @api.depends is triggered by changes to specified fields, regardless of how the change occurs (UI, backend, etc.).
+
+### Persistence:
+Changes made by @api.onchange are temporary and only applied when the user saves the form.
+@api.depends affects fields that are usually stored in the database.
+Use Case:
+
+> @api.onchange is used for enhancing user experience and UI interactivity.
+> @api.depends is used for maintaining data integrity and automatic updates of computed fields.
+> Understanding these distinctions is essential for developing efficient, user-friendly, and data-consistent applications in Odoo.
+
 
 
