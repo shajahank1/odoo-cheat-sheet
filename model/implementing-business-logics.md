@@ -251,10 +251,89 @@ Form View Buttons:
 ________________________________________________________________________________________
 ## 5. Onchange Methods
 Use @api.onchange decorators for methods that should react to changes in the UI, providing dynamic feedback or auto-filling fields.
+Onchange methods in Odoo are used within form views to dynamically update the content based on user interactions. They are particularly useful for providing immediate feedback or recalculating values when a user changes a field in a form.
 
+### Purpose of Onchange Methods:
+- Dynamic UI Updates: Automatically update or modify other fields in the form when a user changes a value.
+- Real-time Feedback: Provide real-time feedback or validations without needing to save the record first.
+
+### How to Implement Onchange Methods:
+- 1. Define an Onchange Method in a Model:
+In your Odoo model, create a method to handle the logic that should be executed when a specific field's value changes.  
+The method should not return anything but can update other fields in the same record (self).
+- 2. Use @api.onchange Decorator:
+Decorate this method with @api.onchange, specifying the field names that trigger this method.  
+When one of these fields is modified in the UI, Odoo will automatically call this method.
+- 3. Implement the Logic:
+Inside the method, update other fields based on the changed field. These changes are reflected immediately in the UI but are not saved to the database until the user saves the form.
+
+**Example:**
+Suppose you have a sale.order.line model and want to update the total price when the quantity or unit price changes:
+
+```
+from odoo import api, models
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    @api.onchange('product_uom_qty', 'price_unit')
+    def _onchange_price_calculation(self):
+        self.total_price = self.product_uom_qty * self.price_unit
+```
+> In this example, _onchange_price_calculation is automatically triggered when product_uom_qty or price_unit is modified in the UI. It recalculates total_price, which is updated in the form immediately.
+
+### Key Points to Remember:
+- Temporary Changes: Changes made by onchange methods are not permanent and are only applied to the UI. They are saved to the database only when the user saves the form.
+- Single Record: Onchange methods are designed to work on a single record (self). They are not meant for operations involving multiple records.
+- No Side Effects: It's good practice to ensure onchange methods don't have side effects outside of the record they are meant to work on.
+- Performance: Keep onchange methods efficient as they are triggered frequently during form interactions. Avoid heavy computations or database operations.
+> Onchange methods are crucial for creating an interactive and dynamic user interface in Odoo, enhancing the overall user experience by providing immediate feedback and data consistency.
+________________________________________________________________________________________
 ## 6. Computed Fields
 Use @api.depends for fields whose value is computed based on other field values. This is crucial for keeping data consistent and up-to-date.
 
+Computed fields in Odoo are fields whose values are calculated dynamically using specified methods. They are essential for displaying data that is derived from other fields without physically storing them in the database.
+
+### Purpose of Computed Fields:
+- Dynamic Data Calculation: Computed fields allow you to display data that is dynamically calculated from other fields.
+- No Physical Storage: The values of computed fields are not usually stored in the database (unless specified).
+- Real-Time Updates: They are updated in real-time when any of the dependent fields change.
+
+### How to Implement Computed Fields:
+- 1. Define a Computed Field in a Model:
+Add a field to your Odoo model and specify its compute parameter, pointing to the name of the method that will calculate its value.
+- 2. Use @api.depends Decorator:
+Decorate the computation method with @api.depends, specifying the fields that it depends on. This ensures that the computed field is recalculated whenever any of these fields change.
+- 3. Implement the Computation Logic:
+Inside the computation method, write the logic to calculate the value of the field. This method typically sets the computed field's value for each record in self.
+
+**Example:**
+Consider a simple example where you have an invoice model with a computed field total_amount that sums up the amounts from all invoice lines:
+
+```
+from odoo import api, fields, models
+
+class Invoice(models.Model):
+    _name = 'invoice'
+
+    invoice_line_ids = fields.One2many('invoice.line', 'invoice_id', string="Invoice Lines")
+    total_amount = fields.Float(compute='_compute_total_amount', string="Total Amount")
+
+    @api.depends('invoice_line_ids.amount')
+    def _compute_total_amount(self):
+        for record in self:
+            record.total_amount = sum(line.amount for line in record.invoice_line_ids)
+```
+> In this example, the total_amount field is a computed field. Its value is the sum of the amounts of all related invoice.line records. The method _compute_total_amount is triggered whenever an amount field in any invoice.line record (related to this invoice) changes.
+
+### Key Points to Remember:
+- Store Computed Fields (Optional): By default, computed fields are not stored in the database. If you want to store them (for performance reasons or to make them searchable), you can add store=True in the field definition.
+- Dependencies Are Crucial: The @api.depends decorator is crucial to ensure that the computed field is updated correctly and automatically.
+- Read-Only: Computed fields are read-only by default. To allow users to manually change computed fields, you can use inverse methods.
+- Performance Considerations: Be cautious with the computation logic, especially for non-stored computed fields, as complex calculations can impact the system's performance.
+> Computed fields are an effective way to present dynamic and calculated data in Odoo applications, enhancing data presentation and ensuring real-time data consistency.
+
+_____________________________________________________________________________________________
 ### Best Practices:
 - Modularize Logic: Keep your business logic modular and reusable. Avoid duplicating code.
 - Error Handling: Implement robust error handling and validation to ensure data integrity.
