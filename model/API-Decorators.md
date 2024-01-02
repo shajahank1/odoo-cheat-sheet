@@ -304,6 +304,49 @@ Example:
 def create(self, vals_list):
     # Logic for batch creation
 ```
+> @api.model_create_multi is a decorator in Odoo's ORM (Object-Relational Mapping) used for optimizing the creation of records. It's particularly useful when you need to create multiple records at once, improving performance by reducing the number of database write operations.
+
+### Purpose of @api.model_create_multi:
+- Bulk Record Creation: Allows for the creation of multiple records in a single call, which is more efficient than creating records one by one, especially in terms of database interactions.
+- Performance Optimization: Reduces the overhead of multiple create operations, making it a preferred method when dealing with large datasets or batch processing.
+### How to Implement @api.model_create_multi:
+##### Basic Steps:
+- Define a Create Method:
+Override the standard create method in your Odoo model.
+This method should be capable of handling a list of dictionaries, where each dictionary contains the data for one record.
+- Use @api.model_create_multi Decorator:
+Decorate the create method with @api.model_create_multi.
+This indicates that the method is designed to handle the creation of multiple records.
+- Implement Bulk Creation Logic:
+Write the logic to iterate over the provided list of data dictionaries and create records accordingly.
+
+**Example:**
+Let's say you have a model my.model and you want to optimize the creation of records.
+
+```
+from odoo import api, models
+
+class MyModel(models.Model):
+    _name = 'my.model'
+
+    name = fields.Char('Name')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        # vals_list is a list of dictionaries
+        for vals in vals_list:
+            # You can add custom logic for each record's values here
+            pass
+        return super(MyModel, self).create(vals_list)
+```
+> In this example, the overridden create method is decorated with @api.model_create_multi. The method takes vals_list, which is a list of dictionaries where each dictionary contains the data for one record. The method processes each dictionary as needed and then calls the super method to actually create the records.
+
+### Key Points to Remember:
+- Use for Bulk Operations: Ideal when you have scenarios like importing data from external sources or creating multiple records based on complex computations.
+- Enhances Performance: Significantly improves performance by reducing the number of database insert commands.
+- Handling Data: Ensure that the method correctly handles each dictionary in vals_list, as each represents a set of data for a new record.
+> Implementing @api.model_create_multi is essential for optimizing the creation of records in bulk in Odoo, leading to more efficient and performant applications, especially in data-intensive scenarios.
+
 ## 8. @api.ensures_one
 **Trigger**: When the method is called.
 **Functionality**: Checks if the method is being called on a single-record recordset, raising an exception if it's called on multiple records.
