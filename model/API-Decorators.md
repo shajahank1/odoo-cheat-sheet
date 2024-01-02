@@ -259,6 +259,42 @@ Example:
 def some_method(self):
     return self.search([('id', '>', 5)])
 ```
+> @api.returns is a decorator in Odoo's ORM (Object-Relational Mapping) system, primarily used to specify the return type of a method, particularly when dealing with recordsets.
+
+### Purpose of @api.returns:
+- Define Return Type: It explicitly defines the type of data a method returns, ensuring consistency and clarity in the method's output, especially when dealing with recordsets.
+- Type Conversion: It automatically converts the method's return value to the specified type, which is particularly useful when the method's return type is not immediately obvious or differs from what's expected.
+### How to Implement @api.returns:
+##### Basic Steps:
+- Define a Method in a Model:
+Create a method within your Odoo model that performs an operation and returns a value.
+- Use @api.returns Decorator:
+Decorate this method with @api.returns, specifying the type of data it should return.
+The first argument is the model name (as a string) if you're returning recordsets, or the Python type (like int, dict) for other data types.
+Optionally, you can provide a lambda function as a second argument to transform the return value.
+- Implement Method Logic:
+Write the logic for your method. Ensure that the return value aligns with the type specified in the @api.returns decorator.
+**Example**:
+Suppose you have a method in a model that performs a search and you want it to return a recordset of res.partner.
+```
+from odoo import api, models
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    @api.model
+    @api.returns('self', lambda value: value.id)
+    def get_partner_by_city(self, city):
+        return self.search([('city', '=', city)])
+```
+> In this example, get_partner_by_city returns a recordset of res.partner records. The @api.returns('self', lambda value: value.id) decorator indicates that the method returns a recordset of the current model ('self' refers to res.partner in this context). The lambda function transforms the recordset into a list of IDs, but this is optional and depends on your specific use case.
+
+### Key Points to Remember:
+- Use for Recordsets: Particularly useful when the method returns recordsets and you want to ensure a specific type of record is returned.
+- Return Transformation: The optional lambda function allows for transforming the returned value, providing additional flexibility.
+- Clarity and Consistency: Helps maintain clarity in method definitions, especially in complex models or when returning non-standard types.
+> Implementing @api.returns correctly can greatly enhance the readability and maintainability of your Odoo code, especially in cases where the return type of a method is not immediately clear or standard. It's a powerful tool for ensuring type consistency in method returns.
+
 ## 7. @api.model_create_multi
 **Trigger**: When creating multiple records.
 **Functionality**: Optimizes the creation of multiple records, reducing the number of database round-trips.
