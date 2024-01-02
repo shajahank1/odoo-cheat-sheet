@@ -356,6 +356,43 @@ Example:
 def method_name(self):
     # Logic for a single record
 ```
+> @api.ensures_one is a decorator in Odoo's ORM (Object-Relational Mapping) system, used to guarantee that a method is called on a singleton recordset, i.e., a recordset containing only one record. This is crucial for methods where operating on multiple records at once could lead to incorrect behavior or data inconsistency.
+
+### Purpose of @api.ensures_one:
+- Singleton Enforcement: Ensures that the method is called with exactly one record in the recordset. It's a safeguard to prevent methods from being inadvertently called on multiple records.
+- Error Prevention: If the method is called with a recordset containing more than one record, Odoo will raise an exception, thus preventing potential errors or unwanted behavior in multi-record scenarios.
+#### How to Implement @api.ensures_one:
+##### Basic Steps:
+- Define a Method in a Model:
+Create a method within your Odoo model that is intended to operate on a single record at a time.
+- Use @api.ensures_one Decorator:
+Decorate this method with @api.ensures_one.
+This decorator does not require any parameters.
+- Implement Method Logic:
+Write the logic for the method as usual. The logic should be designed with the assumption that it will only ever deal with one record.
+**Example:**
+Suppose you have a model res.partner and a method that sends a special notification to a partner. This operation only makes sense for one record at a time.
+
+```
+from odoo import api, models
+
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+
+    @api.ensures_one
+    def send_special_notification(self):
+        # Method logic here
+        print(f"Sending notification to {self.name}")
+
+```
+> In this example, the send_special_notification method is intended to work on a single res.partner record. The @api.ensures_one decorator ensures that if this method is accidentally called with a recordset containing more than one record, Odoo will raise an exception, thus preventing the method from executing in a potentially harmful way.
+
+### Key Points to Remember:
+- Use for Single Record Operations: Ideal for methods that are logically meant to operate on a single record.
+- Exception Handling: Be prepared to handle the exceptions that are raised if the method is called with more than one record.
+- Safety Mechanism: It acts as a safeguard against programming errors where a method intended for a single record is mistakenly called on multiple records.
+> Implementing @api.ensures_one is essential for maintaining data integrity and preventing logical errors in Odoo applications, especially in scenarios where operations are meant to be strictly limited to individual records.
+
 ## 9. @api.depends_context
 **Trigger**: When the context or specified keys in the context change.
 **Functionality**: For computed fields whose value changes based on the user context, like language or company.
