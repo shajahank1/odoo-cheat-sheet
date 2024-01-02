@@ -16,6 +16,64 @@ Window actions are the most common type, used to open a view, like a form or lis
 ```
 #### Business Logic:
 Window actions usually don't contain business logic themselves but are linked to views that can have buttons or fields that trigger server actions or methods for business logic.
+
+> Implementing Window Actions (ir.actions.act_window) in Odoo is a fundamental part of customizing the user interface, particularly when you want to direct users to specific views or forms based on certain actions like clicking a menu item or a button. Window actions are used to open a specific model's view, such as a list, form, calendar, or pivot view.
+
+### Steps to Implement Window Actions:
+#### 1. Define the Action in XML:
+First, you define the action in an XML file within your custom module. This XML will create a record in the ir.actions.act_window model.
+
+XML Definition Example:
+xml
+Copy code
+<record id="action_my_model_form" model="ir.actions.act_window">
+    <field name="name">My Model</field>
+    <field name="res_model">my.model</field>
+    <field name="view_mode">form,tree</field>
+    <!-- Optional: Specify individual view IDs -->
+    <field name="view_id" ref="module_name.view_id_form"/>
+</record>
+In this example, the action opens the my.model model in both form and tree views. You can also specify specific views (form, tree, kanban, etc.) by their external IDs.
+
+#### 2. Add the Action to a Menu (Optional):
+To make the action accessible from the UI, you can link it to a menu item.
+
+Menu Item Example:
+xml
+Copy code
+<menuitem id="menu_my_model"
+          name="My Model"
+          action="module_name.action_my_model_form"
+          parent="base.menu_custom"
+          sequence="10"/>
+This example creates a menu item named "My Model" which, when clicked, triggers the window action to open my.model. The parent attribute is used to specify where in the menu structure this item appears.
+
+3. Link the Action to a Button (Optional):
+Window actions can also be triggered by buttons in views.
+
+**Button in View Example:**
+```
+<record id="view_my_model_form" model="ir.ui.view">
+    <field name="name">my.model.form</field>
+    <field name="model">my.model</field>
+    <field name="arch" type="xml">
+        <form>
+            <!-- Form view content -->
+            <button string="Open Action" type="object" name="%(module_name.action_my_model_form)d"/>
+        </form>
+    </field>
+</record>
+```
+> In this form view for my.model, there's a button that, when clicked, executes the window action defined earlier.
+
+### Key Points to Remember:
+- Action Type: The type of action is ir.actions.act_window for window actions.
+- View Modes: The view_mode field defines which types of views (form, tree, kanban, etc.) are available.
+- Target (Optional): You can specify the target (e.g., new for opening in a dialog) in the action definition.
+- Context (Optional): You can pass default values or other context information to the action using the <field name="context"> tag.
+> Implementing window actions allows you to create a navigational structure and user workflows in your Odoo application, providing a seamless and integrated user experience.
+
+______________________________________________________________
 ## 2. URL Actions (ir.actions.act_url)
 > URL actions are used to redirect the user to a specific URL.
 ### Example and Implementation:
