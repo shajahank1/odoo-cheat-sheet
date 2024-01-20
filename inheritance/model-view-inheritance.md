@@ -56,3 +56,75 @@ This XML snippet extends the res.partner form view to add a custom_field after t
 - Prototypal Inheritance: Best when a distinct model is needed, but with shared characteristics of an existing model.
 - View Inheritance: Useful for customizing the UI without modifying original view definitions. Always use XPath carefully to target the correct elements.
 - Model and view inheritance in Odoo provide a powerful way to customize and extend applications, allowing developers to build upon existing structures and functionalities efficiently.
+----
+# Exercise: Model and View Inheritance
+Certainly! Let's walk through an exercise to demonstrate model and view inheritance in Odoo. We'll use a practical scenario where we extend an existing model and its view.
+
+## Scenario
+Suppose we want to extend the res.partner model (which represents partners/contacts in Odoo) to add a new field, is_preferred_customer. We also want to display this field on the partner form view.
+
+### Step 1: Model Inheritance
+First, let's create a new module (e.g., custom_partner_extension). In this module, we'll extend the res.partner model to add the is_preferred_customer field.
+
+models/custom_partner.py:
+
+```
+from odoo import models, fields
+
+class CustomPartner(models.Model):
+    _inherit = 'res.partner'
+
+    is_preferred_customer = fields.Boolean("Is a Preferred Customer?", default=False)
+```
+> This Python file extends res.partner by adding a new boolean field is_preferred_customer.
+
+### Step 2: View Inheritance
+Now, we'll extend the form view of res.partner to include the new field.
+
+views/custom_partner_view.xml:
+
+```
+<odoo>
+    <data>
+        <record id="view_partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group[@name='sales_purchases']" position="inside">
+                    <field name="is_preferred_customer"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+```
+> In this XML, we are extending the existing partner form view. We use XPath to locate the <group> with the name sales_purchases and add our new field inside this group.
+
+### Step 3: Module Manifest and Initialization
+Define the module manifest (__manifest__.py) and initialize the module by including Python files and view XML files.
+
+__manifest__.py:
+
+```
+{
+    'name': 'Custom Partner Extension',
+    'version': '1.0',
+    'depends': ['base'],
+    'data': [
+        'views/custom_partner_view.xml',
+    ],
+    'demo': [],
+}
+```
+__init__.py:
+
+```
+from . import models
+```
+models/__init__.py:
+
+```
+from . import custom_partner
+```
+### Conclusion
+> With these steps, we have successfully extended an existing model (res.partner) by adding a new field, and we've modified its form view to display this new field. This exercise demonstrates the power and flexibility of model and view inheritance in Odoo, allowing for effective customization of existing functionalities.
