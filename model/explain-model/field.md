@@ -309,6 +309,7 @@ Computed fields in Odoo are fields whose values are calculated dynamically throu
 Consider a scenario where we have a sale.order model, and we want to compute the total amount of all the order lines.
 
 Python Code in an Odoo Model:
+
 ```
 from odoo import api, fields, models
 
@@ -322,8 +323,8 @@ class SaleOrder(models.Model):
     def _compute_total_amount(self):
         for order in self:
             order.total_amount = sum(line.price_subtotal for line in order.order_line_ids)
-            ```
-In this example:
+```
+**In this example:**
 
 - total_amount is a computed field that depends on the price_subtotal of each line in order_line_ids.
 - The _compute_total_amount method calculates the sum of price_subtotal from all order lines and assigns it to total_amount.
