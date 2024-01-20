@@ -1,4 +1,4 @@
-# inheritance
+# Inheritance
 Inheritance in Odoo is a powerful feature that allows you to extend or modify the functionality of existing models and views. It is crucial for customizing and building upon the standard features provided by Odoo. There are primarily two types of inheritance in Odoo: classical inheritance and prototypical (delegation) inheritance.
 
 ## 1. Classical Inheritance
