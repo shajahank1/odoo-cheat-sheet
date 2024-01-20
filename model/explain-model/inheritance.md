@@ -100,3 +100,46 @@ Key Differences and Considerations
 - Maintains separate records linked through relational fields.
 > Classical inheritance in Odoo provides a powerful way to build upon existing models, either by extending their capabilities or by creating new models that share common features. This approach promotes reusability and maintainability in Odoo development.
 
+--- 
+# Prototypical (Delegation) Inheritance
+Prototypical (delegation) inheritance in Odoo, also known as prototype inheritance, is a mechanism that allows you to create a new model which "inherits" or delegates part of its behavior and structure to another existing model. This form of inheritance creates a composition relationship between the new model and the existing model.
+
+### Key Characteristics
+- New Table Creation: Unlike classical inheritance (_inherit), prototypical inheritance (_inherits) creates a new database table for the new model.
+
+- Shared Fields: The new model contains all fields of the delegated (parent) model, in addition to any new fields you define.
+
+- Linked via a Many2one Field: The new model is linked to the existing model through a Many2one field. This relationship is essential for accessing and managing the inherited data.
+
+### Implementation
+- Define the New Model: When defining the new model, you use _inherits to specify the model you're inheriting from.
+- Create a Many2one Field: A Many2one field is created in the new model, linking it to the inherited model.
+**Example**
+Suppose you have a model res.partner and you want to create a new model library.member that extends res.partner.
+
+```
+from odoo import models, fields
+
+class LibraryMember(models.Model):
+    _name = 'library.member'
+    _inherits = {'res.partner': 'partner_id'}
+
+    partner_id = fields.Many2one('res.partner', ondelete='cascade', required=True, auto_join=True)
+    library_card_number = fields.Char("Library Card Number")
+```
+### In this example:
+
+- LibraryMember is a new model that inherits from res.partner.
+- It has its own database table but includes all fields from res.partner.
+- partner_id is a Many2one field linking library.member to res.partner.
+- Any record in library.member will be linked to a corresponding record in res.partner.
+### Usage and Considerations
+- Use Case: Ideal when you need a new model with distinct records but want to reuse the structure and logic of an existing model.
+
+- Data Integrity: The ondelete='cascade' option ensures that if the record in the parent model (res.partner) is deleted, the corresponding record in library.member is also deleted.
+
+- Separate Records: Each library.member record will have a corresponding res.partner record. This is suitable for scenarios where you need to model a "is-a" relationship (a library member is a partner) but also need to maintain separate records.
+
+- Accessing Fields: In the new model, you can access and modify fields from the parent model as if they were directly in the new model.
+
+> Prototypical inheritance is a powerful feature in Odoo that provides flexibility in model design, allowing for the extension of existing models while maintaining separate database entities. This approach is useful for modeling real-world relationships and business scenarios in Odoo applications.
