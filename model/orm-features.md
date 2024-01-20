@@ -79,3 +79,91 @@ Example:
 </record>
 ```
 > These advanced ORM features provide a high degree of flexibility and power, allowing developers to efficiently implement complex business logic and data interactions within the Odoo framework.
+
+----
+# adding constraints and override default ORM methods.
+Adding constraints and overriding default ORM methods are common tasks in Odoo development, allowing you to enforce business rules and customize standard behaviors.
+
+### Adding Constraints
+- SQL Constraints
+SQL constraints are used to enforce data integrity at the database level. You define them in your model class using the _sql_constraints attribute.
+
+Example:
+
+```
+from odoo import models, fields
+
+class LibraryBook(models.Model):
+    _name = 'library.book'
+
+    name = fields.Char('Title', required=True)
+    isbn = fields.Char('ISBN')
+
+    _sql_constraints = [
+        ('isbn_unique', 'UNIQUE(isbn)', 'The ISBN must be unique.'),
+    ]
+```
+> This example ensures that the isbn field is unique across all records in the library.book model.
+
+### Python Constraints
+Python constraints are methods decorated with @api.constrains, used to perform checks on field values before saving the record. If a constraint is violated, a ValidationError is raised.
+
+Example:
+
+```
+from odoo import models, fields, api, exceptions
+
+class LibraryBook(models.Model):
+    _name = 'library.book'
+
+    num_pages = fields.Integer('Number of Pages')
+
+    @api.constrains('num_pages')
+    def _check_num_pages(self):
+        for record in self:
+            if record.num_pages <= 0:
+                raise exceptions.ValidationError("The number of pages must be greater than 0.")
+```
+This example checks that the num_pages field value is greater than 0.
+
+### Overriding Default ORM Methods
+You can override default ORM methods like create, write, read, or unlink to customize their behavior. Always remember to call the super method to maintain the base logic.
+
+Example: Overriding the create Method:
+
+```
+from odoo import models, fields, api
+
+class LibraryBook(models.Model):
+    _name = 'library.book'
+
+    @api.model
+    def create(self, vals):
+        # Custom logic before creating a record
+        if 'special_condition' in vals:
+            # Do something special
+            pass
+        
+        # Call the super method and store its result
+        record = super(LibraryBook, self).create(vals)
+        
+        # Custom logic after creating a record
+        # ...
+
+        return record
+````
+This example adds custom logic before and after creating a record in the library.book model.
+
+### Best Practices
+- Use SQL Constraints Judiciously: SQL constraints are powerful but can be restrictive. Use them for critical data integrity rules like uniqueness.
+
+- Handle Exceptions in Python Constraints: When raising exceptions in Python constraints, provide meaningful error messages.
+
+- Maintain Super Method Logic: When overriding ORM methods, ensure that you call the super() method appropriately to keep the original method’s behavior intact.
+
+- Test Thoroughly: Overriding ORM methods and adding constraints can have significant effects on your module's behavior. Thorough testing is essential to ensure stability and correctness.
+
+
+
+
+
