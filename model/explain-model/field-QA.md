@@ -26,9 +26,9 @@ class SaleOrder(models.Model):
             record.total_weight = total_weight
 ```
 ### In this example:
-> total_weight is a computed field of type Float.
-> _compute_total_weight is the method that computes the value of total_weight.
-> The @api.depends decorator ensures that the total_weight field is recalculated whenever a product's weight or quantity in any order line is changed.
+> total_weight is a computed field of type Float.  
+> _compute_total_weight is the method that computes the value of total_weight.  
+> The @api.depends decorator ensures that the total_weight field is recalculated whenever a product's weight or quantity in any order line is changed.  
 ### Important Notes
 - Performance: While computed fields are powerful, they can impact performance, especially if they depend on fields from other models or involve complex computations.
 - Storing Computed Fields: Optionally, computed fields can be stored in the database by setting store=True. This can improve performance but at the cost of database space and less real-time accuracy.
