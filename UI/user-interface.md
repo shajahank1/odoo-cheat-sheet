@@ -2,17 +2,17 @@
 > In Odoo, the user interface (UI) plays a crucial role in providing an accessible and efficient experience for users. Odoo's UI is built using a combination of server-side Python, client-side JavaScript, and XML templates that define the layout and structure of views. Here's a breakdown of how the UI works in Odoo and an example to illustrate it:
 
 ### Components of Odoo UI
-- Views: Views are the most critical component in Odoo's UI, defining how data is displayed. There are several types of views in Odoo:
+- **Views:** Views are the most critical component in Odoo's UI, defining how data is displayed. There are several types of views in Odoo:
 Form Views: For editing a single record.
-- List (or Tree) Views: For displaying multiple records in a list.
-- Kanban Views: Visual boards for managing tasks.
-- Graph Views: For displaying data graphically.
-- Pivot Views: For creating pivot tables for data analysis.
-- Calendar Views: For displaying records in a calendar format.
-- Gantt Views: For showing records in a timeline.
-- Menus and Actions: Menus organize the access to different models and views. Actions are configurations that define what happens when a menu item is clicked, such as opening a specific view.
-- Widgets: Widgets are reusable UI components that enhance fields in views, such as tags for many2many fields or date pickers for date fields.
-- QWeb Templates: Odoo uses QWeb, an XML-based templating engine, for generating HTML. These templates are used in reports, website modules, and parts of the web client.
+- **List** (or Tree) Views**: For displaying multiple records in a list.
+- **Kanban Views**: Visual boards for managing tasks.
+- **Graph Views**: For displaying data graphically.
+- **Pivot Views:** For creating pivot tables for data analysis.
+- **Calendar Views:** For displaying records in a calendar format.
+- **Gantt Views:** For showing records in a timeline.
+- **Menus and Actions:** Menus organize the access to different models and views. Actions are configurations that define what happens when a menu item is clicked, such as opening a specific view.
+- **Widgets:** Widgets are reusable UI components that enhance fields in views, such as tags for many2many fields or date pickers for date fields.
+- **QWeb Templates:** Odoo uses QWeb, an XML-based templating engine, for generating HTML. These templates are used in reports, website modules, and parts of the web client.
 #### Example: Creating a Simple Form View in Odoo
 To give you a practical example, here's how you would define a simple form view for a custom model model.example:
 
