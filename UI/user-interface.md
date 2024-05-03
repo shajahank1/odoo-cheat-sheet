@@ -128,8 +128,9 @@ Display records on a map, and the routes between them.
 - ```<form>:``` Used for displaying and editing single records.
 - ```<tree>:``` Used for listing records in a tabular format.
 - ```<kanban>: ```Provides a card-based interface suitable for managing tasks or other items in a workflow.
--``` <pivot> and <graph>: ```These are used for displaying data in a pivot table or graphical format respectively.
--``` <calendar>:``` Displays records on a calendar.
+- ``` <pivot> ``` and
+- ``` <graph>: ```These are used for displaying data in a pivot table or graphical format respectively.
+- ``` <calendar>:``` Displays records on a calendar.
 
 #### ```<views/>:```
 - This element is typically used in action definitions to embed multiple views. However, its presence alone in a view definition (<VIEW_TYPE>) does not have any functional impact unless specifically handled by custom modules or used in a context where multiple embedded views might be defined.
