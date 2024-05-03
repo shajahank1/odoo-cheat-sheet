@@ -53,3 +53,79 @@ To give you a practical example, here's how you would define a simple form view 
 Defines an action (ir.actions.act_window) to open the form view of our model.example.
 Creates a menu item (menuitem) under a parent menu (e.g., base.menu_custom) that uses the defined action.
 Sets up a form view (ir.ui.view) for model.example, showing fields name and description grouped together on the form.
+
+
+
+## Generic structure
+Basic views generally share the common minimal structure defined below. Placeholders are denoted in all caps.
+```
+<record id="ADDON.MODEL_view_TYPE" model="ir.ui.view">
+  <field name="name">NAME</field>
+  <field name="model">MODEL</field>
+  <field name="arch" type="xml">
+    <VIEW_TYPE>
+      <views/>
+    </VIEW_TYPE>
+  </field>
+</record>
+
+```
+### View types
+- Form
+Display and edit the data from a single record.
+
+- List
+View and edit multiple records.
+
+- Search
+Apply filters and perform searches. The results are displayed in the current list, kanban… view.
+
+- Kanban
+Display records as “cards”, configurable as a small template.
+
+- Qweb
+Templating of reporting, website…
+
+- Graph
+Visualize aggregations over a number of records or record groups.
+
+- Pivot
+Display aggregations as a pivot table.
+
+- Calendar
+Display records as events in a daily, weekly, monthly, or yearly calendar.
+
+- Cohort Enterprise feature
+Display and understand the way some data changes over a period of time.
+
+- Gantt Enterprise feature
+Display records as a Gantt chart.
+
+- Grid Enterprise feature
+Display computed information in numerical cells; are hardly configurable.
+
+- Map Enterprise feature
+Display records on a map, and the routes between them.
+
+> The XML snippet you've provided is a typical structure for defining a view in Odoo. Each element and attribute has a specific purpose in setting up how data is presented in the Odoo user interface. Here's a detailed explanation of each part of this XML structure:  
+
+- **<record> Element:**
+    - id="ADDON.MODEL_view_TYPE": This is the unique identifier for this record in the XML data file. The id is used to reference this view elsewhere in the Odoo modules or modify it through inheritance. The convention typically includes the module (or addon) name, the model it affects, and the type of view.  
+    - model="ir.ui.view": This specifies that the record being defined is a view. The ir.ui.view model manages all views within Odoo.-  
+- **<field name="name">:**
+    - NAME: The value here is a human-readable name for the view. It is used primarily for identification in the Odoo backend and isn't usually shown to end users. It's helpful for developers when they manage views from the technical settings.  
+- **<field name="model">:**
+    - MODEL: This specifies the database model that the view will be used for. For example, res.partner for partners or sale.order for sales orders. This tells Odoo which model's records are to be displayed or manipulated using this view.  
+- **<field name="arch" type="xml">:**
+  - This field contains the architecture of the view, defining its structure and layout in XML format. The type="xml" attribute specifies     that the content of the field is XML.
+  - Inside the <arch> element, you define the actual structure of the UI using one or more specific view types.  
+**- <VIEW_TYPE>:**
+  - This is a placeholder for the actual type of the view, such as <form>, <tree>, <kanban>, <pivot>, <graph>, or <calendar>. Each view type has its own set of sub-elements and attributes that can be used to configure the display of data.  
+**<form>:** Used for displaying and editing single records.
+**<tree>: **Used for listing records in a tabular format.
+**<kanban>:** Provides a card-based interface suitable for managing tasks or other items in a workflow.
+**<pivot> and <graph>: **These are used for displaying data in a pivot table or graphical format respectively.
+**<calendar>:** Displays records on a calendar.
+- **<views/>:**
+  - This element is typically used in action definitions to embed multiple views. However, its presence alone in a view definition (<VIEW_TYPE>) does not have any functional impact unless specifically handled by custom modules or used in a context where multiple embedded views might be defined.
+
