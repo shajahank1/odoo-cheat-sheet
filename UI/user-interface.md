@@ -109,23 +109,28 @@ Display records on a map, and the routes between them.
 
 > The XML snippet you've provided is a typical structure for defining a view in Odoo. Each element and attribute has a specific purpose in setting up how data is presented in the Odoo user interface. Here's a detailed explanation of each part of this XML structure:  
 
-- **<record> Element:**
-    - id="ADDON.MODEL_view_TYPE": This is the unique identifier for this record in the XML data file. The id is used to reference this view elsewhere in the Odoo modules or modify it through inheritance. The convention typically includes the module (or addon) name, the model it affects, and the type of view.  
-    - model="ir.ui.view": This specifies that the record being defined is a view. The ir.ui.view model manages all views within Odoo.-  
-- **<field name="name">:**
-    - NAME: The value here is a human-readable name for the view. It is used primarily for identification in the Odoo backend and isn't usually shown to end users. It's helpful for developers when they manage views from the technical settings.  
-- **<field name="model">:**
-    - MODEL: This specifies the database model that the view will be used for. For example, res.partner for partners or sale.order for sales orders. This tells Odoo which model's records are to be displayed or manipulated using this view.  
-- **<field name="arch" type="xml">:**
-  - This field contains the architecture of the view, defining its structure and layout in XML format. The type="xml" attribute specifies     that the content of the field is XML.
-  - Inside the <arch> element, you define the actual structure of the UI using one or more specific view types.  
-**- <VIEW_TYPE>:**
-  - This is a placeholder for the actual type of the view, such as <form>, <tree>, <kanban>, <pivot>, <graph>, or <calendar>. Each view type has its own set of sub-elements and attributes that can be used to configure the display of data.  
-**<form>:** Used for displaying and editing single records.
-**<tree>: **Used for listing records in a tabular format.
-**<kanban>:** Provides a card-based interface suitable for managing tasks or other items in a workflow.
-**<pivot> and <graph>: **These are used for displaying data in a pivot table or graphical format respectively.
-**<calendar>:** Displays records on a calendar.
-- **<views/>:**
-  - This element is typically used in action definitions to embed multiple views. However, its presence alone in a view definition (<VIEW_TYPE>) does not have any functional impact unless specifically handled by custom modules or used in a context where multiple embedded views might be defined.
+1.  ```<record> Element:```
+- id="ADDON.MODEL_view_TYPE": This is the unique identifier for this record in the XML data file. The id is used to reference this view elsewhere in the Odoo modules or modify it through inheritance. The convention typically includes the module (or addon) name, the model it affects, and the type of view.
+- model="ir.ui.view": This specifies that the record being defined is a view. The ir.ui.view model manages all views within Odoo.
 
+2. ```<field name="name">:```
+- NAME: The value here is a human-readable name for the view. It is used primarily for identification in the Odoo backend and isn't usually shown to end users. It's helpful for developers when they manage views from the technical settings.
+
+3. ```<field name="model">:```
+- MODEL: This specifies the database model that the view will be used for. For example, res.partner for partners or sale.order for sales orders. This tells Odoo which model's records are to be displayed or manipulated using this view.
+
+4. ```<field name="arch" type="xml">: ```
+- This field contains the architecture of the view, defining its structure and layout in XML format. The type="xml" attribute specifies that the content of the field is XML.
+- Inside the <arch> element, you define the actual structure of the UI using one or more specific view types.
+
+#### ```<VIEW_TYPE>:```
+> This is a placeholder for the actual type of the view, such as ``` <form>, <tree>, <kanban>, <pivot>, <graph>, or <calendar>. ``` Each view type has its own set of sub-elements and attributes that can be used to configure the display of data.
+- ```<form>:``` Used for displaying and editing single records.
+- ```<tree>:``` Used for listing records in a tabular format.
+- ```<kanban>: ```Provides a card-based interface suitable for managing tasks or other items in a workflow.
+-``` <pivot> and <graph>: ```These are used for displaying data in a pivot table or graphical format respectively.
+-``` <calendar>:``` Displays records on a calendar.
+
+#### ```<views/>:```
+- This element is typically used in action definitions to embed multiple views. However, its presence alone in a view definition (<VIEW_TYPE>) does not have any functional impact unless specifically handled by custom modules or used in a context where multiple embedded views might be defined.
+- This XML structure sets the foundation for how data will be presented in the Odoo interface, and can be extended or inherited to modify existing views or add new functionalities.
