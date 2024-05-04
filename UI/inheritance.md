@@ -86,7 +86,73 @@ In this example, the loyalty_points field is added right after the email field i
 > Inheritance in Odoo provides a robust mechanism for extending and customizing functionality without modifying the original codebase, ensuring that customizations are maintainable and that the core application can be updated without overwriting custom features. Each type of inheritance serves different needs, from simple field additions to creating entirely new models based on existing ones.
 
 
+# Classical inheritance
+> Classical inheritance, often referred to as model extension in Odoo, is a powerful mechanism that allows developers to add new fields, methods, or modify existing ones within an existing model without needing to redefine the entire model. This approach leverages Python's inheritance capabilities and is extensively used in Odoo to enhance and customize the functionality of built-in models.
 
+### Purpose of Classical Inheritance
+Classical inheritance is used in Odoo to:
 
+- Extend existing models with additional fields or functionality.
+- Override methods to change the default behavior of standard operations.
+- Maintain compatibility with upstream updates, ensuring that customizations are preserved even when the base application is updated.
+### How to Implement Classical Inheritance
+> To implement classical inheritance in Odoo, you inherit from an existing model and specify the _inherit attribute with the name of the model you want to extend. Here's the step-by-step process:
+
+#### 1. Identify the Model to Extend
+First, determine which existing Odoo model's functionality you need to extend or modify.
+
+#### 2. Create a New Python Class that Inherits from the Existing Model
+In your custom module, define a new class that inherits from the existing model. Use the _inherit attribute to specify the model you are extending.
+
+#### 3. Add or Override Fields and Methods
+In your new class, add new fields, or override existing methods to modify their behavior.
+
+### Example: Extending the res.partner Model
+Suppose you want to add a customer loyalty points field to the res.partner model, which is used for managing customers and other types of partners in Odoo.
+
+#### Step 1: Create a Python File in Your Module
+In your custom module, create a new Python file or edit an existing one, and define your new class.
+
+#### Step 2: Define the Class
+Here’s how you might define your class to add a loyalty_points field:
+
+```
+from odoo import models, fields
+
+class Partner(models.Model):
+    _inherit = 'res.partner'
+
+    loyalty_points = fields.Integer("Loyalty Points", help="Stores customer loyalty points.")
+```
+In this example:
+
+_inherit = 'res.partner' tells Odoo that you are extending the res.partner model.
+loyalty_points is a new integer field added to the res.partner model.
+#### Step 3: Update the View (optional)
+If you want the new field to be visible in the UI, you must modify the view. This can be done using view inheritance:
+
+```
+<odoo>
+    <data>
+        <record id="view_partner_form_inherit" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='email']" position="after">
+                    <field name="loyalty_points"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
+```
+This XML snippet extends the existing partner form view to include the loyalty_points field right after the email field.
+
+### Best Practices for Classical Inheritance
+- Minimize Overrides: Only override methods when necessary. Excessive use of overrides can lead to maintenance issues and conflicts with other modules.
+- Use Super: When overriding methods, make sure to call super() to keep the base class's behavior unless explicitly intending to replace it.
+- Document Changes: Always document your changes and the reasons behind method overrides or field additions to aid future developers and maintainers of the module.
+> Classical inheritance is one of the most common ways to customize and extend Odoo functionality, allowing for a high degree of integration and compatibility with the core system and other modules.
 
 
