@@ -156,3 +156,70 @@ This XML snippet extends the existing partner form view to include the loyalty_p
 > Classical inheritance is one of the most common ways to customize and extend Odoo functionality, allowing for a high degree of integration and compatibility with the core system and other modules.
 
 
+# Prototypal Inheritance
+> Prototypal inheritance, often referred to as prototype-based inheritance, is a key concept in Odoo development, particularly when it comes to creating new models that are similar to existing ones but need their own separate database tables. This is different from classical inheritance, where the new class shares the same table as the parent class.
+
+### Purpose of Prototypal Inheritance
+The main use of prototypal inheritance in Odoo is to:
+
+- Create a new model that inherits behavior and structure from an existing model: This is useful when you want the new model to have all the fields and methods of the base model but need it to be stored separately in the database.
+- Facilitate modular extensions: Allows developers to extend core functionality in modular ways without altering the base model's database schema.
+- Enhance maintainability and clarity: Keeping separate models in separate tables can make the system more organized and easier to maintain, especially when dealing with complex data structures.
+### How to Implement Prototypal Inheritance
+> To implement prototypal inheritance in Odoo, you define a new model that specifies both _name (indicating it is a new model with its own table) and _inherit (linking it to the existing model from which it should inherit fields and methods).
+
+### Steps for Implementing Prototypal Inheritance
+- Define the New Model: Create a Python class in your module that specifies both _name (the technical name of the new model) and _inherit (the model it should inherit from).
+- Use Inherited Fields: Automatically, all fields and methods from the parent model are available in the new model.
+- Add Additional Fields: Optionally, you can add more fields specific to the new model.
+- Example: Creating a Specialized Partner Model
+> Suppose you want to create a specialized version of the res.partner model for VIP customers that includes additional fields and functionalities but should be stored in a separate database table.
+
+#### Step 1: Define the New Model
+Create a new Python file or edit an existing one in your custom module:
+
+```
+from odoo import models, fields
+
+class ResPartnerVIP(models.Model):
+    _name = 'res.partner.vip'  # This is the new model's technical name.
+    _inherit = 'res.partner'   # This inherits from res.partner.
+
+    vip_level = fields.Selection([
+        ('gold', 'Gold'),
+        ('platinum', 'Platinum'),
+        ('diamond', 'Diamond')
+    ], string="VIP Level", help="The VIP level of the partner.")
+```
+In this example:
+
+> The new model res.partner.vip will have its own table in the database but inherit all fields and methods from res.partner.
+A new field vip_level is added to differentiate VIP customers.
+#### Step 2: Modify the View (if necessary)
+To make the new field visible in the UI, you would modify the view accordingly, either by extending an existing view or creating a new one.
+
+```
+<odoo>
+    <data>
+        <record id="res_partner_vip_form_view" model="ir.ui.view">
+            <field name="name">res.partner.vip.form</field>
+            <field name="model">res.partner.vip</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="vip_level"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>
+```
+### Best Practices for Prototypal Inheritance
+- Clear Model Definition: Ensure that the purpose of the new model is clear and that it justifies the need for a separate table.
+- Avoid Redundancy: Do not duplicate fields or methods that are inherited unless necessary.
+- Document Differences: Clearly document how the new model differs from its parent to aid in maintenance and future development.
+> Prototypal inheritance is a powerful feature in Odoo that enables robust data architecture and application design, allowing for specific customization while maintaining a clean and efficient database structure.
