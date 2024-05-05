@@ -62,9 +62,11 @@ This attribute is used to specify the view title, which is displayed only if you
 - Requirement: Optional
 - Type: String
 - Default: ''
-  ```
+
+```
   <form nosearch="Contact Information">
 ```
+
 ### create:
 This attribute is used to disable or enable record creation on the view.
 - Requirement: Optional
@@ -78,7 +80,7 @@ This attribute is used to disable or enable record edition on the view.
 - Requirement: Optional
 - Type: Boolean
 - Default: True
-  ```
+```
   <form edit="False">
 ```
 ### duplicate:
@@ -86,7 +88,7 @@ This attribute is used to disable or enable record duplication on the view throu
 - Requirement: Optional
 - Type: Boolean
 - Default: True
-    ```
+```
     <form duplicate="False">
 ```
 ### delete:
@@ -94,7 +96,7 @@ This attribute is used to disable or enable record deletion on the view through 
 - Requirement: Optional
 - Type: Boolean
 - Default: True
-      ```
+```
       <form delete="False">
 
 ```
@@ -111,8 +113,62 @@ This attribute is used to disable automatic focusing on the first field in the v
 Requirement: Optional
 Type: Boolean
 Default: False
-  ```
+```
   <form disable_autofocus="True">
 
 ```
 > These attributes provide additional customization options for <form> views in Odoo, allowing developers to control various aspects such as record creation, edition, duplication, deletion, autofocus behavior, and more.
+
+## banner_route
+> The banner_route attribute in Odoo is used to fetch HTML content from a specified route and prepend it to the view. Here's a breakdown of its functionality:
+
+### Purpose:
+The banner_route attribute allows you to dynamically inject HTML content into a view in Odoo.
+This HTML content is fetched from a specified route on the server and is displayed above the main view of the page.
+### Usage:
+To use banner_route, you include it as an attribute in the XML definition of your view (e.g., <tree>, <form>, <kanban>).
+The value of banner_route is set to the URL of the controller route from which HTML content will be fetched.
+### Behavior:
+When the view is rendered, Odoo fetches the HTML content from the specified route on the server.
+The fetched HTML content is then prepended to the view, appearing above the main content of the page.
+If the HTML content includes a <link> tag for a stylesheet, Odoo automatically moves it from its original location and appends it to the <head> section of the page.
+### Interacting with Backend:
+To interact with the backend (e.g., trigger actions), you can use <a type="action"> tags within the fetched HTML content.
+These action tags allow users to trigger actions defined in the backend controller.
+Limitations:
+Only views extending AbstractView and AbstractController, such as Form, Kanban, and List views, can use the banner_route attribute.
+### Example:
+- In the example provided, the <tree> view has a banner_route attribute set to /module_name/hello.
+- There's a corresponding Python controller route defined in the MyController class, which returns a JSON response containing HTML content when accessed.
+The returned HTML content includes a <link> tag for a stylesheet and a <h1> tag with the text "hello, world".
+> In summary, banner_route is a powerful attribute in Odoo for dynamically injecting HTML content into views, allowing for customization and dynamic rendering of pages based on server-side data or logic.
+
+### Here's an example demonstrating the usage of the banner_route attribute in Odoo:
+
+```
+<form string="Example Form View" banner_route="/module_name/hello">
+    <!-- Form fields go here -->
+</form>
+```
+In this example, we have a <form> view with the banner_route attribute set to /module_name/hello. When this form view is rendered, Odoo will fetch HTML content from the specified route (/module_name/hello) and prepend it to the form view.
+Python Controller Route:
+```
+from odoo import http
+from odoo.http import request
+
+class MyController(http.Controller):
+
+    @http.route('/module_name/hello', auth='user', type='json')
+    def hello(self):
+        return {
+            'html': """
+                <div>
+                    <link href="/module_name/static/src/css/banner.css" rel="stylesheet">
+                    <h1>Hello, World!</h1>
+                </div>
+            """
+        }
+```
+> In the Python controller, we define a route /module_name/hello that returns a JSON response containing HTML content. The HTML content includes a <link> tag for a stylesheet (banner.css) and an <h1> tag with the text "Hello, World!".When this route is accessed, Odoo will fetch the HTML content returned by this controller and prepend it to the form view.
+- Result:When the form view is rendered, the HTML content fetched from the controller route will be displayed above the form fields. The stylesheet specified in the HTML content will be applied, and the text "Hello, World!" will be displayed in a heading (<h1>).This allows you to dynamically inject custom HTML content into your views based on server-side logic, providing flexibility and customization options in your Odoo applications.
+
