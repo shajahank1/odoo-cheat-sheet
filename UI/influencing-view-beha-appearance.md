@@ -169,6 +169,7 @@ class MyController(http.Controller):
             """
         }
 ```
-> In the Python controller, we define a route /module_name/hello that returns a JSON response containing HTML content. The HTML content includes a <link> tag for a stylesheet (banner.css) and an <h1> tag with the text "Hello, World!".When this route is accessed, Odoo will fetch the HTML content returned by this controller and prepend it to the form view.
-- Result:When the form view is rendered, the HTML content fetched from the controller route will be displayed above the form fields. The stylesheet specified in the HTML content will be applied, and the text "Hello, World!" will be displayed in a heading (<h1>).This allows you to dynamically inject custom HTML content into your views based on server-side logic, providing flexibility and customization options in your Odoo applications.
+- In the Python controller, we define a route /module_name/hello that returns a JSON response containing HTML content. The HTML content includes a ```<link>``` tag for a stylesheet (banner.css) and an ```<h1>``` tag with the text "Hello, World!".When this route is accessed, Odoo will fetch the HTML content returned by this controller and prepend it to the form view.  
+
+- Result:When the form view is rendered, the HTML content fetched from the controller route will be displayed above the form fields. The stylesheet specified in the HTML content will be applied, and the text "Hello, World!" will be displayed in a heading ```(<h1>).``` This allows you to dynamically inject custom HTML content into your views based on server-side logic, providing flexibility and customization options in your Odoo applications.
 
